@@ -355,7 +355,8 @@ function resetDamage() {
     
     //character info
     for(var i = 0; i < characterInfo.length; i++) {
-        characterInfo[i].totalDamage = 0;
+        characterInfo[i].attackDamage = 0;
+        characterInfo[i].skillDamage = 0;
         characterInfo[i].das = 0;
         characterInfo[i].tas = 0;
     }
