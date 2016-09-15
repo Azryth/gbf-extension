@@ -291,6 +291,8 @@ function resetDamage() {
     skillsUsed = 0;
     summonsUsed = 0;
     
+    //clear average damage per second manually
+    $("#damageTime").text("0");
     //chart
     adtChart.data.labels = [];
     adtChart.data.datasets[0].data = [];
