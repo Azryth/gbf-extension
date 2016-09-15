@@ -166,7 +166,7 @@ function appendTurnLog(action, damage, turnDetails) {
                         subsubsubItem.addClass("flex-container");
                         subsubsubAction = $("<p>");
                         subsubsubAction.addClass("subsubsub");
-                        if( k == 1) {
+                        if( k == 0) {
                             subsubsubAction.text("Normal");
                         } else {
                             subsubsubAction.text("Extra");
