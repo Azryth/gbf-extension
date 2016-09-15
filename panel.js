@@ -41,6 +41,7 @@ function updateStatistics() {
     $("#totalDamage").text(displayNumbers(totalDamage));
     $("#totalAttackDamage").text(displayNumbers(totalTurnDamage));
     $("#totalSkillDamage").text(displayNumbers(totalSkillDamage));
+    $("#totalChainBurst").text(displayNumbers(totalChainBurstDamage));
     $("#totalSummonDamage").text(displayNumbers(totalSummonDamage));
     
     if (turnNumber != 0) {
@@ -287,6 +288,7 @@ function resetDamage() {
     totalTurnDamage = 0;
     totalSummonDamage = 0;
     totalSkillDamage = 0;
+    totalChainBurstDamage = 0;
     turnNumber = 0;
     skillsUsed = 0;
     summonsUsed = 0;
@@ -338,6 +340,7 @@ var totalDamage = 0; //all damage combined
 var totalTurnDamage = 0; //all damage from attack
 var totalSummonDamage = 0; //all summon damage
 var totalSkillDamage = 0; //all skill damage
+var totalChainBurstDamage = 0; //damage from all chain bursts
 var turnNumber = 0;
 var raidID = ""; //twitter raidID
 var bossInfo = []; //boss info with name, lv, maxhp, hp
@@ -467,6 +470,7 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                                 charaDetails.pos = -1;
                                 charaDetails.type = "Chain Burst";
                                 
+                                totalChainBurstDamage += charaDetails.total;
                                 turnDetails.total += charaDetails.total;
                                 turnDetails.details.push(charaDetails);
                             }
