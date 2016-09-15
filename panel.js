@@ -540,13 +540,15 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
             req.getContent(function(body){
                 var scenario = JSON.parse(body).scenario;
                 var skillName = "";
+                var character;
                 for (var i = 0; i < scenario.length; i++) { 
                     if(scenario[i].cmd == "ability") {
                         skillName = scenario[i].name;
+                        character = Number(scenario[i].pos);
                     } else if (scenario[i].cmd == "damage") {
                         for (var j = 0; j < scenario[i].list.length; j++) {
                                 actionDamage += scenario[i].list[j].value;
-                            }
+                         }
                     
                     //boss info    
                     } else if (scenario[i].cmd == "boss_gauge") {
@@ -578,6 +580,7 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                 if(skillName != "") {
                     skillsUsed++;
                     if(actionDamage != 0) {
+                        characterInfo[character].totalDamage += actionDamage;
                         totalSkillDamage += actionDamage;
                         turnDamage += actionDamage;
                         appendOthersLog(skillName, actionDamage);
