@@ -207,7 +207,7 @@ function appendTurnLog(action, damage, turnDetails) {
 }
 
 function appendOthersLog(action, damage) {
-    $("#log").append("<li class=\"flex-container\"><p class=\"sub\">" + action + "</p><p>" + displayNumbers(damage) + "</p></li>");
+    $("#log").append("<li class=\"flex-container\"><p class=\"halfsub\">" + action + "</p><p>" + displayNumbers(damage) + "</p></li>");
             
     totalDamage += actionDamage;
     actionDamage = 0;
@@ -413,7 +413,7 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                 var perChara = [];
                 for (var i = 0; i < scenario.length; i++) { 
                     //normal attacks
-                    if(scenario[i].cmd == "attack") {
+                    if(scenario[i].cmd == "attack" && scenario[i].from == "player") {
                         var j
                         for (j = 0; j < scenario[i].damage.length; j++) { //loop for character turn (Single, DA, TA)
                             for(var k = 0; k < scenario[i].damage[j].length; k++) { //loop for attack components (extra damage)

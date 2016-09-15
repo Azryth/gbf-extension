@@ -30,6 +30,10 @@ li {
     margin: 1em;
 }
 
+.flex-container .halfsub {
+    padding-left: 1em;
+}
+
 .flex-container .sub {
     padding-left: 2em;
 }
