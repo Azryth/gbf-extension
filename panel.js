@@ -302,6 +302,7 @@ function startTimer() {
         timer = setInterval(function() {
             elapsed_seconds = elapsed_seconds + 1;
             $('#timer').text(get_elapsed_time_string(elapsed_seconds));
+            $("#damageTime").text(displayNumbers((totalDamage / elapsed_seconds).toFixed(2)) + " ("+ elapsed_seconds +"s)");
             }, 1000);
         $("#toggleTimer").text("pause timer");
     } else {
