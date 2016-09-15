@@ -267,6 +267,8 @@ function clearTimer() {
     elapsed_seconds = 0;
     $('#timer').text("00:00:00");
     timer = undefined;
+    
+    $("#toggleTimer").text("start timer");
 }
 
 document.querySelector("#toggleTimer").addEventListener('click', startTimer, false);
