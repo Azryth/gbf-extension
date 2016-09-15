@@ -195,7 +195,12 @@ function appendTurnLog(action, damage, turnDetails) {
                 subsubItem.addClass("flex-container");
                 subsubAction = $("<p>");
                 subsubAction.addClass("subsub");
-                subsubAction.text("Attack " + (j+1));
+                
+                if ( turnDetails.details[i].details[j].details.length > 1) {
+                    subsubAction.html("&#10148; Attack " + (j+1));
+                } else {
+                    subsubAction.text("Attack " + (j+1));
+                }
                 subsubItem.append(subsubAction);
                 subsubAction = $("<p>");
                 subsubAction.text(displayNumbers(turnDetails.details[i].details[j].total));
