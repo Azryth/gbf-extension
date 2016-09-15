@@ -17,9 +17,11 @@
 
 ### Usage Notes ###
 
-* the game only sends character names when it loads the battle (i.e. when you enter for the first time or refresh the page). So, for the logger to display the names if you opened it in battle, refreash the page. Same goes for RaidID.
+* The game only sends character names when it loads the battle (i.e. when you enter for the first time or refresh the page). So, for the logger to display the names if you opened it in battle, refreash the page. Same goes for RaidID.
 * I don't know how the game updates boss hp when you're not doing anything so it only updates when you attack/ use skills / use summons.
+* Damage per second only updates when attacking / using skills / using summons when the timer is running.
 
 ### TODO list ###
 
 * Extra damage from summons are not logged yet
+* Saving data
