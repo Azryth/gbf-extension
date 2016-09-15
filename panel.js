@@ -71,7 +71,7 @@ function updateBossInfo() {
     $("#enemyInfo").html("");
     for (var i = 0; i < bossInfo.length; i++) {
         if ( bossInfo[i].name != undefined) {
-            $("#enemyInfo").append("<li class=\"flex-container\"><p>" + bossInfo[i].name +"</p></li><li class=\"flex-container\"><p class=\"sub\">Max HP</p><p>" + displayNumbers(bossInfo[i].maxhp) + "</p></li><li class=\"flex-container\"><p class=\"sub\">HP</p><p>" + displayNumbers(bossInfo[i].hp) + "</p></li>")
+            $("#enemyInfo").append("<li class=\"flex-container\"><p>" + bossInfo[i].name +"</p></li><li class=\"flex-container\"><p class=\"sub\">Max HP</p><p>" + displayNumbers(bossInfo[i].maxhp) + "</p></li><li class=\"flex-container\"><p class=\"sub\">HP</p><p>" + displayNumbers(bossInfo[i].hp) + " (" + displayNumbers((Number(bossInfo[i].hp) / Number(bossInfo[i].maxhp) * 100).toFixed(2)) + "%)</p></li>")
         }
     }
 }
