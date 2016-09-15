@@ -38,6 +38,7 @@ function displayNumbers(x) {
 }
 
 function updateStatistics() {
+    var time = elapsed_seconds;
     $("#totalDamage").text(displayNumbers(totalDamage));
     $("#totalAttackDamage").text(displayNumbers(totalTurnDamage));
     $("#totalSkillDamage").text(displayNumbers(totalSkillDamage));
@@ -56,7 +57,7 @@ function updateStatistics() {
     
     if(timer != undefined) {
         if (elapsed_seconds != 0){
-            $("#damageTime").text(displayNumbers(Math.round(totalDamage / elapsed_seconds)));
+            $("#damageTime").text(displayNumbers((totalDamage / time).toFixed(2)) + " ("+ time+"s)");
         } else {
             $("#damageTime").text("0");
         }
@@ -80,7 +81,48 @@ function updateBossInfo() {
 function updateCharacterInfo() {
     $("#characterInfo").html("");
     for (var i = 0; i < characterInfo.length; i++) {
-        $("#characterInfo").append("<li class=\"flex-container\"><p>" + characterInfo[i].name +"</p></li><li class=\"flex-container\"><p class=\"sub\">total damage</p><p>" + displayNumbers(characterInfo[i].totalDamage) + "</p></li>")
+        
+        character = $("<li>");
+        character.addClass("flex-container");
+        character.html("<p>" + characterInfo[i].name +"</p>" + "<p>" + displayNumbers(characterInfo[i].skillDamage + characterInfo[i].attackDamage) + "</p>");
+        
+        $("#characterInfo").append(character);
+        
+        var breakdown = $("<div>");
+        breakdown.hide();
+        
+        //attack damage
+        var damageDetail = $("<li>");
+        damageDetail.addClass("flex-container");
+        var p = $("<p>");
+        p.addClass("sub");
+        p.text("attack damage");
+        damageDetail.append(p);
+        
+        p = $("<p>");
+        p.text(displayNumbers(characterInfo[i].attackDamage));
+        damageDetail.append(p);
+        breakdown.append(damageDetail);
+        
+        //skill damage
+        damageDetail = $("<li>");
+        damageDetail.addClass("flex-container");
+        var p = $("<p>");
+        p.addClass("sub");
+        p.text("skill damage");
+        damageDetail.append(p);
+        
+        p = $("<p>");
+        p.text(displayNumbers(characterInfo[i].skillDamage));
+        damageDetail.append(p);
+        breakdown.append(damageDetail);
+        breakdown.append($("</br>"));
+        $("#characterInfo").append(breakdown);
+        character.click(function() {
+            $(this).next().toggle();
+        });
+        
+        //$("#characterInfo").append("<li class=\"flex-container\"><p>" + characterInfo[i].name +"</p></li><li class=\"flex-container\"><p class=\"sub\">total damage</p><p>" + displayNumbers(characterInfo[i].skillDamage + characterInfo[i].attackDamage) + "</p></li>")
     }
 }
 
@@ -106,7 +148,7 @@ function appendTurnLog(action, damage, turnDetails) {
     //summary
     var item = $("<li>");
     item.addClass("flex-container");
-    item.html("<p>" + action + "</p><p>" + displayNumbers(damage) + "</p></li>");
+    item.html("<p>&#10148; " + action + "</p><p>" + displayNumbers(damage) + "</p></li>");
     
     $("#log").prepend(item); 
     
@@ -124,7 +166,11 @@ function appendTurnLog(action, damage, turnDetails) {
         subAction = $("<p>");
         subAction.addClass("sub");
         if (turnDetails.details[i].pos != -1) {
-            subAction.text(characterInfo[turnDetails.details[i].pos].name + "(" + turnDetails.details[i].type + ")");            
+            if(!(turnDetails.details[i].type == "Chain Burst" || (turnDetails.details[i].type == "Single" && turnDetails.details[i].details[0].details.length < 2) || turnDetails.details[i].type == "CA")){
+                subAction.html("&#10148;"+ characterInfo[turnDetails.details[i].pos].name + "(" + turnDetails.details[i].type + ")"); 
+            } else {
+                subAction.text(characterInfo[turnDetails.details[i].pos].name + "(" + turnDetails.details[i].type + ")"); 
+            }            
         } else {
             if( turnDetails.details[i].type == "Chain Burst") {
                 subAction.text(turnDetails.details[i].type);
@@ -347,37 +393,43 @@ var bossInfo = []; //boss info with name, lv, maxhp, hp
 var characterInfo = [ //character info with name, damage dealt
     { //first character (i.e. Gran/Djeeta)
         name: "Ally 1",
-        totalDamage: 0,
+        attackDamage: 0,
+        skillDamage: 0,
         das: 0,
         tas: 0
     },
     { //second character
         name: "Ally 2",
-        totalDamage: 0,
+        attackDamage: 0,
+        skillDamage: 0,
         das: 0,
         tas: 0
     },
     { //third character
         name: "Ally 3",
-        totalDamage: 0,
+        attackDamage: 0,
+        skillDamage: 0,
         das: 0,
         tas: 0
     },
     { //fourth character
         name: "Ally 4",
-        totalDamage: 0,
+        attackDamage: 0,
+        skillDamage: 0,
         das: 0,
         tas: 0
     },
     { //fifth character
         name: "Ally 5",
-        totalDamage: 0,
+        attackDamage: 0,
+        skillDamage: 0,
         das: 0,
         tas: 0
     },
     { //sixth character
         name: "Ally 6",
-        totalDamage: 0,
+        attackDamage: 0,
+        skillDamage: 0,
         das: 0,
         tas: 0
     },
@@ -501,7 +553,7 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                         updateBossInfo();
                     }
                     if(charaDetails.pos != -1) {
-                        characterInfo[charaDetails.pos].totalDamage += charaDetails.total;
+                        characterInfo[charaDetails.pos].attackDamage += charaDetails.total;
                         if(charaDetails.type == "Double") {
                             characterInfo[charaDetails.pos].das++;
                         } else if ( charaDetails.type == "Triple") {
@@ -580,7 +632,7 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                 if(skillName != "") {
                     skillsUsed++;
                     if(actionDamage != 0) {
-                        characterInfo[character].totalDamage += actionDamage;
+                        characterInfo[character].skillDamage += actionDamage;
                         totalSkillDamage += actionDamage;
                         turnDamage += actionDamage;
                         appendOthersLog(skillName, actionDamage);
