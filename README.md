@@ -1,8 +1,6 @@
-# README #
+# GBF Logger #
 
-This README would normally document whatever steps are necessary to get your application up and running.
-
-### What is this repository for? ###
+### What ###
 
 * Chrome GBF extension that logs damage and DATA rates
 
