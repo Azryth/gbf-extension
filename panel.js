@@ -206,7 +206,7 @@ function appendTurnLog(action, damage, turnDetails) {
 }
 
 function appendOthersLog(action, damage) {
-    $("#log").append("<li class=\"flex-container\"><p class=\"halfsub\">" + action + "</p><p>" + displayNumbers(damage) + "</p></li>");
+    $("#log").prepend("<li class=\"flex-container\"><p class=\"halfsub\">" + action + "</p><p>" + displayNumbers(damage) + "</p></li>");
             
     totalDamage += actionDamage;
     actionDamage = 0;
