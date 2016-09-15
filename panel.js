@@ -53,10 +53,12 @@ function updateStatistics() {
         $("#summonsTurn").text("0");
     }
     
-    if (elapsed_seconds != 0){
-        $("#damageTime").text(displayNumbers(Math.round(totalDamage / elapsed_seconds)));
-    } else {
-        $("#damageTime").text("0");
+    if(timer != undefined) {
+        if (elapsed_seconds != 0){
+            $("#damageTime").text(displayNumbers(Math.round(totalDamage / elapsed_seconds)));
+        } else {
+            $("#damageTime").text("0");
+        }
     }
     
     updateCharacterInfo();
