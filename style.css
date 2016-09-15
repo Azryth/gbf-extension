@@ -1,0 +1,131 @@
+/*------------General-------------*/
+body
+{
+	font-family: 'Lato', Verdana, Geneva, sans-serif;
+	letter-spacing:0.1vw;
+	font-size: 1.25vw;
+	line-height: 200%;
+}
+
+h1 {
+    font-size: 2em;
+    margin: 0.25em 0em 1em 0em;
+    text-align: center;
+}
+
+li {
+    font-size: 1.5em;
+}
+
+.flex-container {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+}
+
+.flex-item {
+    width: 48%;
+    margin: 1em;
+}
+
+.flex-container .sub {
+    padding-left: 2em;
+}
+
+.flex-container .subsub {
+    padding-left: 3em;
+}
+
+.flex-container .subsubsub {
+    padding-left: 4em;
+}
+
+.clock {
+    display:flex;
+    flex-direction: row;
+    justify-content: space-around;
+    text-align: center;
+}
+.clock h2 {
+    font-size: 3em;
+}
+
+#timer {
+    padding-top: 0.25em;
+}
+
+.clickable {
+    display: inline-block;
+    background-color: #007fff;
+    color: white;
+    
+    border: 0.1em;
+    border-color: 003eff;
+    border-radius: 0.3em;
+    border-style: solid;
+    padding: 0.5em;
+}
+
+.clickable:hover {
+    cursor: pointer;
+}
+
+#log-container {
+    height: 20vw;
+    background-color: #e6e6e6;
+    padding: 0em 0.4em 0em 0.4em;
+    overflow-y:scroll;
+}
+
+#log li{
+    border: 0.1em;
+    border-top-style: ridge;
+}
+
+#enemyInfo {
+    padding-bottom: 1em;
+}
+
+.statSection {
+    border: 0.2px;
+    border-bottom-style: solid;
+}
+
+#buttonContainer {
+    margin-bottom: 2em;
+}
+
+
+.character {
+    border: 0.2px;
+    border-bottom-style: solid;  
+    margin-top: 1em;
+}
+/*-------------graphs-------------*/
+
+#graph {
+    width: 400em;
+    height: 200em;
+}
+
+#graphAxis {
+    width:80vw;
+}
+
+.chartWrapper {
+    text-align: center;
+}
+
+.chartWrapper > canvas {
+    left: 0;
+    top: 0;
+    pointer-events:none;
+}
+
+.chartAreaWrapper {
+    display: inline-block;
+    width: 80vw;
+    overflow-x: auto;
+}
