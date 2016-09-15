@@ -105,7 +105,7 @@ function appendTurnLog(action, damage, turnDetails) {
     item.addClass("flex-container");
     item.html("<p>" + action + "</p><p>" + displayNumbers(damage) + "</p></li>");
     
-    $("#log").append(item); 
+    $("#log").prepend(item); 
     
     var container = $("<div>");
     container.hide();
@@ -195,15 +195,12 @@ function appendTurnLog(action, damage, turnDetails) {
     item.click(function() {
         $(this).next().toggle();
     });
-           
-    $("#log").append(container);
-    //$("#log").append("<li class=\"flex-container\"><p>" + action + "</p><p>" + displayNumbers(damage) + "</p></li>");
+      
+    item.after(container);
             
     totalDamage += turnDetails.total;
     
     updateStatistics();
-    
-    $("#log-container").scrollTop($("#log-container")[0].scrollHeight);
 }
 
 function appendOthersLog(action, damage) {
@@ -213,8 +210,6 @@ function appendOthersLog(action, damage) {
     actionDamage = 0;
     
     updateStatistics();
-    
-    $("#log-container").scrollTop($("#log-container")[0].scrollHeight);
 }
 
 function updateadtChart() {
