@@ -666,7 +666,6 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                         
                         for(var j = 0; j < scenario[i].list[0].damage.length; j++) {
                             actionDamage += scenario[i].list[0].damage[j].value;
-                            console.log(scenario[i].list[0].damage[j].value);
                         }
                      
                     
@@ -716,10 +715,11 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                 //raid id
                 if(startinfo.multi == 1) {
                     raidID = startinfo.twitter.battle_id;
-                    showRaidId();
                 } else {
                     raidID = "";
                 }
+                showRaidId();
+                
                 //boss info
                 var boss;
                 bossInfo = [];
