@@ -55,14 +55,6 @@ function updateStatistics() {
         $("#summonsTurn").text("0");
     }
     
-    if(timer != undefined) {
-        if (elapsed_seconds != 0){
-            $("#damageTime").text(displayNumbers((totalDamage / time).toFixed(2)) + " ("+ time+"s)");
-        } else {
-            $("#damageTime").text("0");
-        }
-    }
-    
     updateCharacterInfo();
 }
 
@@ -259,6 +251,7 @@ function appendTurnLog(action, damage, turnDetails) {
     item.after(container);
             
     totalDamage += turnDetails.total;
+    timedTotalDamage += turnDetails.total;
     
     updateStatistics();
 }
@@ -267,6 +260,7 @@ function appendOthersLog(action, damage) {
     $("#log").prepend("<li class=\"flex-container\"><p class=\"halfsub\">" + action + "</p><p>" + displayNumbers(damage) + "</p></li>");
             
     totalDamage += actionDamage;
+    timedTotalDamage += actionDamage;
     actionDamage = 0;
     
     updateStatistics();
@@ -308,7 +302,8 @@ function startTimer() {
         timer = setInterval(function() {
             elapsed_seconds = elapsed_seconds + 1;
             $('#timer').text(get_elapsed_time_string(elapsed_seconds));
-            $("#damageTime").text(displayNumbers((totalDamage / elapsed_seconds).toFixed(2)) + " ("+ elapsed_seconds +"s)");
+            $("#timedtotalDamage").text(displayNumbers(timedTotalDamage));
+            $("#damageTime").text(displayNumbers((timedTotalDamage / elapsed_seconds).toFixed(2)) + " ("+ elapsed_seconds +"s)");
             }, 1000);
         $("#toggleTimer").text("pause timer");
     } else {
@@ -324,7 +319,10 @@ function clearTimer() {
     } 
     
     elapsed_seconds = 0;
+    timedTotalDamage = 0;
     $('#timer').text("00:00:00");
+    $("#damageTime").text("0");
+    $("#timedtotalDamage").text("0");
     timer = undefined;
     
     $("#toggleTimer").text("start timer");
@@ -351,8 +349,6 @@ function resetDamage() {
     skillsUsed = 0;
     summonsUsed = 0;
     
-    //clear average damage per second manually
-    $("#damageTime").text("0");
     //chart
     adtChart.data.labels = [];
     adtChart.data.datasets[0].data = [];
@@ -396,6 +392,7 @@ document.querySelector("#clearEnemyInfo").addEventListener('click', clearEnemyIn
 var actionDamage = 0; //damage from action
 var turnDamage = 0;
 var totalDamage = 0; //all damage combined
+var timedTotalDamage = 0; //total damage logged while timer is running
 var totalTurnDamage = 0; //all damage from attack
 var totalSummonDamage = 0; //all summon damage
 var totalSkillDamage = 0; //all skill damage

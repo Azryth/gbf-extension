@@ -35,18 +35,6 @@
                 
                 <!--right column-->
                 <div class="flex-item">
-                    
-                    <!--timer-->
-                    <div class="clock">
-                        <div class="flex-container">
-                            <p class="clickable" id="toggleTimer">start timer</p>
-                            <p class="clickable" id="clearTimer">clear timer</p>
-                            <h2 id="timer">00:00:00</h2>
-                        </div>
-                    </div>
-                
-                    <br/>
-                
                     <div class="flex-container" id="buttonContainer">
                         <p class="clickable" id="clearLog">clear battlelog</p>
                         <p class="clickable" id="clearEnemyInfo">clear enemy info</p>
@@ -62,25 +50,40 @@
                     
                         
                         <h1>Statistics</h1>
-                        <li class="flex-container"><p>total damage</p><p id="totalDamage">0</p></li>
+                        <div class="statSection">
+                            <li class="flex-container"><p>total damage</p><p id="totalDamage">0</p></li>
+                            
+                            <li class="flex-container"><p class="sub">total attack damage</p><p id="totalAttackDamage">0</p></li>
+                            
+                            <li class="flex-container"><p class="sub">total skill damage</p><p id="totalSkillDamage">0</p></li>
+                            
+                            <li class="flex-container"><p class="sub">total chain burst damage</p><p id="totalChainBurst">0</p></li>
+                            
+                            <li class="flex-container"><p class="sub">total summon damage</p><p id="totalSummonDamage">0</p></li>
+                            
+                            <br/>
+                            
+                            <li class="flex-container"><p class="sub">avg damage per turn</p><p id="damageTurn">0</p></li>
+                            
+                            <br/>
+                            
+                            <li class="flex-container"><p>skills per turn</p><p id="skillsTurn">0</p></li>
+                            <li class="flex-container"><p>summons per turn</p><p id="summonsTurn">0</p></li>
+                        </div>
                         
-                        <li class="flex-container"><p class="sub">total attack damage</p><p id="totalAttackDamage">0</p></li>
-                        
-                        <li class="flex-container"><p class="sub">total skill damage</p><p id="totalSkillDamage">0</p></li>
-                        
-                        <li class="flex-container"><p class="sub">total chain burst damage</p><p id="totalChainBurst">0</p></li>
-                        
-                        <li class="flex-container"><p class="sub">total summon damage</p><p id="totalSummonDamage">0</p></li>
-                        
-                        <br/>
-                        
-                        <li class="flex-container"><p class="sub">avg damage per turn</p><p id="damageTurn">0</p></li>
-                        <li class="flex-container"><p class="sub">avg damage per second</p><p id="damageTime">0</p></li>
-                        
-                        <br/>
-                        
-                        <li class="flex-container"><p>skills per turn</p><p id="skillsTurn">0</p></li>
-                        <li class="flex-container"><p>summons per turn</p><p id="summonsTurn">0</p></li>
+                        <!--timer-->
+                        <h1>DPS</h1>
+                        <div class="statSection">
+                            <div class="clock">
+                                <div class="flex-container">
+                                    <p class="clickable" id="toggleTimer">start timer</p>
+                                    <p class="clickable" id="clearTimer">clear timer</p>
+                                    <h2 id="timer">00:00:00</h2>
+                                </div>
+                            </div>
+                            <li class="flex-container"><p>timed total damage</p><p id="timedtotalDamage">0</p></li>
+                            <li class="flex-container"><p>avg damage per second</p><p id="damageTime">0</p></li>
+                        </div>
                         
                     </ul>
                 </div>

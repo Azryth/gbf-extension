@@ -51,9 +51,10 @@ li {
     flex-direction: row;
     justify-content: space-around;
     text-align: center;
+    margin-bottom: 1em;
 }
 .clock h2 {
-    font-size: 3em;
+    font-size: 2em;
 }
 
 #timer {
@@ -66,7 +67,7 @@ li {
     color: white;
     
     border: 0.1em;
-    border-color: 003eff;
+    border-color: #003eff;
     border-radius: 0.3em;
     border-style: solid;
     padding: 0.5em;
@@ -77,7 +78,7 @@ li {
 }
 
 #log-container {
-    height: 20vw;
+    height: 40vh;
     background-color: #e6e6e6;
     padding: 0em 0.4em 0em 0.4em;
     overflow-y:scroll;
@@ -89,11 +90,12 @@ li {
 }
 
 #enemyInfo {
-    padding-bottom: 1em;
+    /*padding-bottom: 1em;*/
 }
 
 .statSection {
     border: 0.2px;
+    padding-bottom: 1em;
     border-bottom-style: solid;
 }
 
