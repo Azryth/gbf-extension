@@ -71,17 +71,28 @@ function updateBossInfo() {
 }
 
 function updateCharacterInfo() {
+    //check which infos are hidden
+    var isVisible = [];
+    $("#characterInfo").children(":nth-child(even)").each(function () {
+        isVisible.push($(this).is(":visible"));
+    });
+    
+    //clear the contents
     $("#characterInfo").html("");
+    
+    //add new content
     for (var i = 0; i < characterInfo.length; i++) {
         
         character = $("<li>");
         character.addClass("flex-container");
-        character.html("<p>" + characterInfo[i].name +"</p>" + "<p>" + displayNumbers(characterInfo[i].skillDamage + characterInfo[i].attackDamage) + "</p>");
+        character.html("<p>&#10148;" + characterInfo[i].name +"</p>" + "<p>" + displayNumbers(characterInfo[i].skillDamage + characterInfo[i].attackDamage) + "</p>");
         
         $("#characterInfo").append(character);
         
         var breakdown = $("<div>");
-        breakdown.hide();
+        if(!isVisible[i]) {
+            breakdown.hide();
+        }
         
         //attack damage
         var damageDetail = $("<li>");
@@ -146,6 +157,7 @@ function appendTurnLog(action, damage, turnDetails) {
     //summary
     var item = $("<li>");
     item.addClass("flex-container");
+    item.addClass("turn");
     item.html("<p>&#10148; " + action + "</p><p>" + displayNumbers(damage) + "</p></li>");
     
     $("#log").prepend(item); 

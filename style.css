@@ -32,14 +32,17 @@ li {
 
 .flex-container .halfsub {
     padding-left: 1em;
+    border-style: none;
 }
 
 .flex-container .sub {
     padding-left: 2em;
+    border-style: none;
 }
 
 .flex-container .subsub {
     padding-left: 3em;
+    border-style: none;
 }
 
 .flex-container .subsubsub {
@@ -84,9 +87,10 @@ li {
     overflow-y:scroll;
 }
 
-#log li{
-    border: 0.1em;
-    border-top-style: ridge;
+#log .turn{
+    border: 0.05em;
+    border-top-style: solid;
+    border-color: whitesmoke;
 }
 
 #enemyInfo {
