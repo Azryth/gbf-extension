@@ -555,7 +555,7 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                         
                         updateBossInfo();
                         
-                    } else if (scenario[i].cmd == "die" && scenario[i].to == "boss") { 
+                    } else if ((scenario[i].cmd == "die" || scenario[i].cmd == "stop") && scenario[i].to == "boss") { 
                         if ( bossInfo[Number(scenario[i].pos)] != undefined) {
                             bossInfo[Number(scenario[i].pos)].hp = "0";
                         } else {
