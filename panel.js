@@ -72,7 +72,7 @@ Clears all boss information and adds the current one
 function updateBossInfo() {
     $("#enemyInfo").html("");
     for (var i = 0; i < bossInfo.length; i++) {
-        if ( bossInfo[i].name != undefined) {
+        if ( bossInfo[i] != undefined && bossInfo[i].name != undefined) {
             $("#enemyInfo").append("<li class=\"flex-container\"><p>" + bossInfo[i].name +"</p></li><li class=\"flex-container\"><p class=\"sub\">Max HP</p><p>" + displayNumbers(bossInfo[i].maxhp) + "</p></li><li class=\"flex-container\"><p class=\"sub\">HP</p><p>" + displayNumbers(bossInfo[i].hp) + " (" + displayNumbers((Number(bossInfo[i].hp) / Number(bossInfo[i].maxhp) * 100).toFixed(2)) + "%)</p></li>")
         }
     }
@@ -123,6 +123,12 @@ function updateCharacterInfo() {
         });
         
         //$("#characterInfo").append("<li class=\"flex-container\"><p>" + characterInfo[i].name +"</p></li><li class=\"flex-container\"><p class=\"sub\">total damage</p><p>" + displayNumbers(characterInfo[i].skillDamage + characterInfo[i].attackDamage) + "</p></li>")
+    }
+    if(characterInfo[0].name == "Ally 1") {
+        var note = $("<p>");
+        p.css("font-size", "1.1vw");
+        p.text("*Note: The logger was started after the battle has started. Ally numbering is according to the state of the party when the logger was opened. To display the names correctly refresh the page (totals will remain in the position they are in and may be incorrect after refresh).");
+        $("#characterInfo").append(p);
     }
 }
 
@@ -441,6 +447,8 @@ var characterInfo = [ //character info with name, damage dealt
         tas: 0
     },
 ]; 
+formation = []; // length 4 array. Each position holds the character that is in the position of the index
+noFormationInfo = false; //flag in case the logger is opened when already in battle
 var skillsUsed = 0;
 var summonsUsed = 0;
 
@@ -455,7 +463,11 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
         //attack
         if(path == "normal_attack_result.json") {
             req.getContent(function(body){
-                var scenario = JSON.parse(body).scenario;
+                if (formation.length == 0) {
+                    formation = [0, 1, 2, 3];
+                }
+                var data = JSON.parse(body);
+                var scenario = data.scenario;
                 //safety check
                 var chainBurst = false;
                 //store all turn information in here
@@ -558,13 +570,18 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                         }
                         
                         updateBossInfo();
+                    
+                    } else if (scenario[i].cmd == "replace" ) {
+                        formation[scenario[i].pos] = scenario[i].npc;
                     }
+                    
+                    //increase individual character totals
                     if(charaDetails.pos != -1) {
-                        characterInfo[charaDetails.pos].attackDamage += charaDetails.total;
+                        characterInfo[formation[charaDetails.pos]].attackDamage += charaDetails.total;
                         if(charaDetails.type == "Double") {
-                            characterInfo[charaDetails.pos].das++;
+                            characterInfo[formation[charaDetails.pos]].das++;
                         } else if ( charaDetails.type == "Triple") {
-                            characterInfo[charaDetails.pos].tas++;
+                            characterInfo[formation[charaDetails.pos]].tas++;
                         } 
                     }
                     charaDetails = { //reset
@@ -591,20 +608,30 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                     details: []
                 };
                 updateCharacterDATAInfo();
+                
+                //status at the end of turn
+                var status = data.status;
+                if (status.formation != undefined) {
+                    formation = status.formation; //just in case
+                }
             });
         }
         
         //skill
         else if(path == "ability_result.json") {
             req.getContent(function(body){
-                var scenario = JSON.parse(body).scenario;
+                if (formation.length == 0) {
+                    formation = [0, 1, 2, 3];
+                }
+                var data = JSON.parse(body);
+                var scenario = data.scenario;
                 var skillName = "";
                 var character;
                 for (var i = 0; i < scenario.length; i++) { 
                     if(scenario[i].cmd == "ability") {
                         skillName = scenario[i].name;
                         character = Number(scenario[i].pos);
-                    } else if (scenario[i].cmd == "damage") {
+                    } else if (scenario[i].cmd == "damage" && scenario[i].to == "boss") {
                         for (var j = 0; j < scenario[i].list.length; j++) {
                                 actionDamage += scenario[i].list[j].value;
                          }
@@ -633,13 +660,15 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                         }
                         
                         updateBossInfo();
+                    } else if (scenario[i].cmd == "replace" ) {
+                        formation[scenario[i].pos] = scenario[i].npc;
                     }
                 }
                 
                 if(skillName != "") {
                     skillsUsed++;
                     if(actionDamage != 0) {
-                        characterInfo[character].skillDamage += actionDamage;
+                        characterInfo[formation[character]].skillDamage += actionDamage;
                         totalSkillDamage += actionDamage;
                         turnDamage += actionDamage;
                         appendOthersLog(skillName, actionDamage);
@@ -647,13 +676,23 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                         appendOthersLog(skillName, "");
                     }
                 }
+                
+                //status at the end of turn
+                var status = data.status;
+                if (status.formation != undefined) {
+                    formation = status.formation; //just in case
+                }
             });
         }
         
         // summon
         else if(path == "summon_result.json") {
             req.getContent(function(body){
-                var scenario = JSON.parse(body).scenario;
+                if (formation.length == 0) {
+                    formation = [0, 1, 2, 3];
+                }
+                var data = JSON.parse(body);
+                var scenario = data.scenario;
                 var summonName = "";
                 for (var i = 0; i < scenario.length; i++) { 
                 
@@ -693,6 +732,8 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                         }
                         
                         updateBossInfo();
+                    } else if (scenario[i].cmd == "replace" ) {
+                        formation[scenario[i].pos] = scenario[i].npc;
                     }
                 }
                 if(summonName != "") {
@@ -704,6 +745,12 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                     } else {
                         appendOthersLog(summonName, "");
                     }
+                }
+                
+                //status at the end of turn
+                var status = data.status;
+                if (status.formation != undefined) {
+                    formation = status.formation; //just in case
                 }
             });
         }
@@ -744,6 +791,11 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                 updateCharacterInfo();
                 updateCharacterDATAInfo()
                 
+                //team formation
+                if (startinfo.formation != undefined) {
+                    formation = startinfo.formation;
+                }
+                
             });
         
         }
@@ -765,7 +817,7 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                 
                 }
             });
-        }
+        } 
     }
 });
 

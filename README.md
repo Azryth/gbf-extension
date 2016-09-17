@@ -24,7 +24,6 @@
 
 ### TODO list ###
 
-* There is currently a bug where backrow character's damage is not logged properly
 * Extra damage from summons are not logged yet
 * Show if debuffs hit/miss (will get complicated)
 * Saving data
