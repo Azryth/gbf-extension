@@ -529,20 +529,18 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                         turnDetails.total += charaDetails.total;
                         turnDetails.details.push(charaDetails);
                     //chain burst    
-                    } else if (chainBurst == true) {
-                        if (scenario[i].cmd == "effect" && scenario[i].kind.indexOf("burst") !== -1) {
-                            if ((i < scenario.length - 1) && scenario[i + 1].cmd == "damage") {
-                                for (var j = 0; j < scenario[i + 1].list.length; j++) {
-                                    charaDetails.total += scenario[i + 1].list[j].value;
-                                }
-                                charaDetails.pos = -1;
-                                charaDetails.type = "Chain Burst";
-                                
-                                totalChainBurstDamage += charaDetails.total;
-                                turnDetails.total += charaDetails.total;
-                                turnDetails.details.push(charaDetails);
+                    } else if (chainBurst == true && scenario[i].cmd == "effect" && scenario[i].kind.indexOf("burst") !== -1) {
+                        if ((i < scenario.length - 1) && scenario[i + 1].cmd == "damage") {
+                            for (var j = 0; j < scenario[i + 1].list.length; j++) {
+                                charaDetails.total += scenario[i + 1].list[j].value;
                             }
-                        }
+                            charaDetails.pos = -1;
+                            charaDetails.type = "Chain Burst";
+                            
+                            totalChainBurstDamage += charaDetails.total;
+                            turnDetails.total += charaDetails.total;
+                            turnDetails.details.push(charaDetails);
+                    }
                     //boss info    
                     } else if (scenario[i].cmd == "boss_gauge") {
                         if (bossInfo[scenario[i].pos] != undefined) {
@@ -558,16 +556,14 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                         updateBossInfo();
                         
                     } else if (scenario[i].cmd == "die" && scenario[i].to == "boss") { 
-                        if ( bossInfo[scenario[i].pos] != undefined) {
-                            bossInfo[scenario[i].pos].hp = "0";
+                        if ( bossInfo[Number(scenario[i].pos)] != undefined) {
+                            bossInfo[Number(scenario[i].pos)].hp = "0";
                         } else {
-                            bossInfo[scenario[i].pos] = {
+                            bossInfo[Number(scenario[i].pos)] = {
                                 name : undefined
                             };
                         }
                         
-                        updateBossInfo();
-                    
                     } else if (scenario[i].cmd == "replace" ) {
                         formation[scenario[i].pos] = scenario[i].npc;
                     }
@@ -611,6 +607,9 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                 if (status.formation != undefined) {
                     formation = status.formation; //just in case
                 }
+                
+                updateBossInfo();
+                
             });
         }
         
