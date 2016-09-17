@@ -386,6 +386,7 @@ function clearEnemyInfo() {
     $("#enemyInfo").html("");
     bossInfo = [];
     $("#raidID").html("");
+    raidID = "";
 }
 
 $(function() {
