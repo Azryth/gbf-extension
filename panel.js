@@ -139,7 +139,7 @@ function updateCharacterDATAInfo() {
     $("#characterDATAInfo").html("");
     for (var i = 0; i < characterInfo.length; i++) {
         
-        var daRate = (characterInfo[i].das / (turnNumber - characterInfo[i].tas) * 100).toFixed(2);var taRate = (characterInfo[i].tas / turnNumber * 100).toFixed(2);
+        var daRate = (characterInfo[i].das / (turnNumber - characterInfo[i].tas - characterInfo[i].cas) * 100).toFixed(2);var taRate = (characterInfo[i].tas / (turnNumber * 100 - characterInfo[i].cas)).toFixed(2);
         
         $("#characterDATAInfo").append("<div class=\"character\"><li class=\"flex-container\"><p>" + characterInfo[i].name +"</p></li><li class=\"flex-container\"><p class=\"sub\">DA rate</p><p>" + daRate + "%</p></li><li class=\"flex-container\"><p class=\"sub\">TA rate</p><p>" + taRate + "%</p></li><div>")
     }
@@ -420,42 +420,48 @@ var characterInfo = [ //character info with name, damage dealt
         attackDamage: 0,
         skillDamage: 0,
         das: 0,
-        tas: 0
+        tas: 0,
+        cas: 0
     },
     { //second character
         name: "Ally 2",
         attackDamage: 0,
         skillDamage: 0,
         das: 0,
-        tas: 0
+        tas: 0,
+        cas: 0
     },
     { //third character
         name: "Ally 3",
         attackDamage: 0,
         skillDamage: 0,
         das: 0,
-        tas: 0
+        tas: 0,
+        cas: 0
     },
     { //fourth character
         name: "Ally 4",
         attackDamage: 0,
         skillDamage: 0,
         das: 0,
-        tas: 0
+        tas: 0,
+        cas: 0
     },
     { //fifth character
         name: "Ally 5",
         attackDamage: 0,
         skillDamage: 0,
         das: 0,
-        tas: 0
+        tas: 0,
+        cas: 0
     },
     { //sixth character
         name: "Ally 6",
         attackDamage: 0,
         skillDamage: 0,
         das: 0,
-        tas: 0
+        tas: 0,
+        cas: 0
     },
 ]; 
 formation = []; // length 4 array. Each position holds the character that is in the position of the index
@@ -589,7 +595,9 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                             characterInfo[formation[charaDetails.pos]].das++;
                         } else if ( charaDetails.type == "Triple") {
                             characterInfo[formation[charaDetails.pos]].tas++;
-                        } 
+                        } else if ( charaDetails.type == "CA") {
+                            characterInfo[formation[charaDetails.pos]].cas++;
+                        }
                     }
                     charaDetails = { //reset
                         total: 0,
@@ -823,7 +831,7 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                                 name : undefined
                             };
                         }
-                     else if (scenario[i].cmd == "stop" && scenario[i].to == "boss") {
+                    } else if (scenario[i].cmd == "stop" && scenario[i].to == "boss") {
                         if ( bossInfo[scenario[i].pos] != undefined) {
                             bossInfo[scenario[i].pos].hp = "0";
                         } else {
