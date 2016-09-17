@@ -3,6 +3,7 @@
 ### What ###
 
 * Chrome GBF extension that logs damage and DATA rates
+* It simply reads out information the server sends to your browser. Nothing more, nothing less.
 
 ### How to set up ###
 
@@ -14,6 +15,11 @@
 
 * Open Chrome Devtools
 * Switch to GBF stats tab
+
+### Feedback ###
+
+If you would like to leave some feedback (bugs, opinion, whatever), use this [form](https://docs.google.com/forms/d/e/1FAIpQLSfhruGYJ6cnb4V8rY85WR3LYyJOs0cfIISMhzttRWSdJ8BkuA/viewform)
+
 
 ### Usage Notes ###
 
