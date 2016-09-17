@@ -384,6 +384,7 @@ function clearLog() {
 
 function clearEnemyInfo() {
     $("#enemyInfo").html("");
+    bossInfo = [];
     $("#raidID").html("");
 }
 
@@ -821,9 +822,19 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                                 name : undefined
                             };
                         }
+                     else if (scenario[i].cmd == "stop" && scenario[i].to == "boss") {
+                        if ( bossInfo[scenario[i].pos] != undefined) {
+                            bossInfo[scenario[i].pos].hp = "0";
+                        } else {
+                            bossInfo[scenario[i].pos] = {
+                                name : undefined
+                            };
+                        }
                     }
                 
                 }
+                
+                updateBossInfo();
             });
         } 
     }
