@@ -1,12 +1,11 @@
 {
-    "name": "gbf",
+    "name": "Damage Logger",
     "version": "0.1",
-    "description": "Granblue Fantasy extension",
+    "description": "Reads and displays data",
     "manifest_version": 2,
     "devtools_page": "devtools.html",
     "permissions": [
-        "tabs", 
-        "http://*/*",
-        "https://*/*"
+        "http://game.granbluefantasy.jp/*",
+        "http://gbf.game.mbga.jp/*"
     ]
 }
