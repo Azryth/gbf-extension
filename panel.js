@@ -626,7 +626,7 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                 
                 //status at the end of turn
                 var status = data.status;
-                if (status.formation != undefined) {
+                if (status != undefined && status.formation != undefined) {
                     formation = status.formation; //just in case
                 }
                 
@@ -695,9 +695,9 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                     }
                 }
                 
-                //status at the end of turn
+                //status at the end of ability
                 var status = data.status;
-                if (status.formation != undefined) {
+                if (status != undefined && status.formation != undefined) {
                     formation = status.formation; //just in case
                 }
             });
@@ -765,9 +765,9 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                     }
                 }
                 
-                //status at the end of turn
+                //status at the end of summon
                 var status = data.status;
-                if (status.formation != undefined) {
+                if (status != undefined && status.formation != undefined) {
                     formation = status.formation; //just in case
                 }
             });
