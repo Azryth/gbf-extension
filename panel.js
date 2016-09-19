@@ -139,8 +139,16 @@ function updateCharacterDATAInfo() {
     $("#characterDATAInfo").html("");
     for (var i = 0; i < characterInfo.length; i++) {
         
-        var daRate = (characterInfo[i].das / (turnNumber - characterInfo[i].tas - characterInfo[i].cas) * 100).toFixed(2);var taRate = (characterInfo[i].tas / (turnNumber * 100 - characterInfo[i].cas)).toFixed(2);
-        
+        if ((turnNumber - characterInfo[i].tas - characterInfo[i].cas) != 0) {
+            var daRate = (characterInfo[i].das / (turnNumber - characterInfo[i].tas - characterInfo[i].cas) * 100).toFixed(2);
+        } else {
+            var daRate = 0;
+        }
+        if ((turnNumber - characterInfo[i].cas) != 0) {
+            var taRate = (characterInfo[i].tas / (turnNumber - characterInfo[i].cas) * 100 ).toFixed(2);
+        } else {
+            taRate = 0;
+        }
         $("#characterDATAInfo").append("<div class=\"character\"><li class=\"flex-container\"><p>" + characterInfo[i].name +"</p></li><li class=\"flex-container\"><p class=\"sub\">DA rate</p><p>" + daRate + "%</p></li><li class=\"flex-container\"><p class=\"sub\">TA rate</p><p>" + taRate + "%</p></li><div>")
     }
 }
