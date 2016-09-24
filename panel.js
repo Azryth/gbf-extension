@@ -85,7 +85,8 @@ function updateCharacterInfo() {
         
         character = $("<li>");
         character.addClass("flex-container");
-        character.html("<p>&#10148;" + characterInfo[i].name +"</p>" + "<p>" + displayNumbers(characterInfo[i].skillDamage + characterInfo[i].attackDamage) + "</p>");
+        character.addClass("toggleable");
+        character.html("<p>\> " + characterInfo[i].name +"</p>" + "<p>" + displayNumbers(characterInfo[i].skillDamage + characterInfo[i].attackDamage) + "</p>");
         
         $("#characterInfo").append(character);
         
@@ -129,9 +130,10 @@ function updateCharacterInfo() {
     }
     if(characterInfo[0].name == "Ally 1") {
         var note = $("<p>");
-        p.css("font-size", "1.1vw");
-        p.text("*Note: The logger was started after the battle has started. Ally numbering is according to the state of the party when the logger was opened. To display the names correctly refresh the page (totals will remain in the position they are in and may be incorrect after refresh).");
-        $("#characterInfo").append(p);
+        note.addClass("warning");
+        note.css("font-size", "1.1vw");
+        note.text("*Note: The logger was started after the battle has started. Ally numbering is according to the state of the party when the logger was opened. To display the names correctly refresh the page (totals will remain in the position they are in and may be incorrect after refresh).");
+        $("#characterInfo").append(note);
     }
 }
 
@@ -166,7 +168,8 @@ function appendTurnLog(action, damage, turnDetails) {
     var item = $("<li>");
     item.addClass("flex-container");
     item.addClass("turn");
-    item.html("<p>&#10148; " + action + "</p><p>" + displayNumbers(damage) + "</p></li>");
+    item.addClass("toggleable");
+    item.html("<p>\> " + action + "</p><p>" + displayNumbers(damage) + "</p></li>");
     
     $("#log").prepend(item); 
     
@@ -185,7 +188,8 @@ function appendTurnLog(action, damage, turnDetails) {
         subAction.addClass("sub");
         if (turnDetails.details[i].pos != -1) {
             if(!(turnDetails.details[i].type == "Chain Burst" || (turnDetails.details[i].type == "Single" && turnDetails.details[i].details[0].details.length < 2) || turnDetails.details[i].type == "CA")){
-                subAction.html("&#10148;"+ characterInfo[turnDetails.details[i].pos].name + "(" + turnDetails.details[i].type + ")"); 
+                subAction.html("\> "+ characterInfo[turnDetails.details[i].pos].name + "(" + turnDetails.details[i].type + ")"); 
+                subItem.addClass("toggleable");
             } else {
                 subAction.text(characterInfo[turnDetails.details[i].pos].name + "(" + turnDetails.details[i].type + ")"); 
             }            
@@ -215,7 +219,8 @@ function appendTurnLog(action, damage, turnDetails) {
                 subsubAction.addClass("subsub");
                 
                 if ( turnDetails.details[i].details[j].details.length > 1) {
-                    subsubAction.html("&#10148; Attack " + (j+1));
+                    subsubAction.html("\> Attack " + (j+1));
+                    subsubItem.addClass("toggleable");
                 } else {
                     subsubAction.text("Attack " + (j+1));
                 }
@@ -269,7 +274,7 @@ function appendTurnLog(action, damage, turnDetails) {
     });
       
     item.after(container);
-            
+    
     totalDamage += turnDetails.total;
     timedTotalDamage += turnDetails.total;
     
@@ -278,7 +283,7 @@ function appendTurnLog(action, damage, turnDetails) {
 
 function appendOthersLog(action, damage) {
     $("#log").prepend("<li class=\"flex-container\"><p class=\"halfsub\">" + action + "</p><p>" + displayNumbers(damage) + "</p></li>");
-            
+        
     totalDamage += actionDamage;
     timedTotalDamage += actionDamage;
     actionDamage = 0;
@@ -402,9 +407,32 @@ $(function() {
 });
 
 
+function saveLog() {
+	var link = document.getElementById("saveLog");
+	var logFile = $("<html>");
+	var head = $("<head>");
+	var body = $("<body>");
+	$("<style type=\"text/css\">html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video { margin: 0;	padding: 0;	border: 0; font-size: 100%;	font: inherit; vertical-align: baseline; } article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section { display: block; } body { line-height: 1; } ol, ul { list-style: none; } blockquote, q { quotes: none; } blockquote:before, blockquote:after, q:before, q:after { content: ''; content: none; } table { border-collapse: collapse; border-spacing: 0; } </style>").appendTo(head);
+	$("<style type=\"text/css\"> body {	font-family: 'Lato', Verdana, Geneva, sans-serif; letter-spacing:0.1vw;	font-size: 1.25vw; line-height: 200%; } h1 { font-size: 2em; margin: 0.25em 0em 1em 0em; text-align: center; } li { font-size: 1.5em; } .flex-container { display: flex; width: 100%; flex-direction: row; flex-wrap: nowrap; justify-content: space-between; } .flex-item { width: 48%; margin: 1em; } .flex-container .halfsub { padding-left: 1em; border-style: none; } .flex-container .sub { padding-left: 2em; border-style: none; } .flex-container .subsub { padding-left: 3em; border-style: none; } .flex-container .subsubsub { padding-left: 4em; }.statSection { border: 0.2px; padding-bottom: 1em; border-bottom-style: solid; } #log-container { height: 50vh; background-color: #e6e6e6; padding: 0em 0.4em 0em 0.4em; overflow-y:scroll; } #log .turn{ border: 0.05em; border-top-style: solid; border-color: whitesmoke; } .character { border: 0.2px; border-bottom-style: solid; margin-top: 1em; } .clock { display:flex; flex-direction: row; justify-content: space-around; text-align: center; margin-bottom: 1em; } .clock h2 { font-size: 2em; } #timer { padding-top: 0.25em; }</style>").appendTo(head);
+	$("<link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css\"></style>").appendTo(head);
+	$("<script   src=\"https://code.jquery.com/jquery-3.1.1.min.js\"   integrity=\"sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=\"   crossorigin=\"anonymous\"></script>").appendTo(head);
+	$("<script src=\"https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js\"></script>").appendTo(head);
+	
+	$("#tabs").clone(true).appendTo(body);
+	$("<script type=\"text/javascript\"> $(\".toggleable\").each( function() { $(this).click(function() { $(this).next().toggle();}) }) </script>").appendTo(body);
+	$("<script type=\"text/javascript\"> $(function() { $(\"#tabs\").tabs(); });</script>").appendTo(body);
+	head.appendTo(logFile);
+	body.appendTo(logFile);
+	body.find(".clickable").remove();
+	body.find(".warning").remove();
+	body.find("#chartSection").remove();
+	link.href = "data:text/plain;charsset=utf-8," + encodeURIComponent(logFile.prop("outerHTML"));
+}
+
 document.querySelector("#resetDamage").addEventListener('click', resetDamage, false);
 document.querySelector("#clearLog").addEventListener('click', clearLog, false);
 document.querySelector("#clearEnemyInfo").addEventListener('click', clearEnemyInfo, false);
+document.querySelector("#saveLog").addEventListener('click', saveLog, false);
 
 //----------------------------------------------------------------------------
 /////////////////

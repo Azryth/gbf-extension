@@ -17,6 +17,13 @@ li {
     font-size: 1.5em;
 }
 
+a, a:link, a:visited 
+{
+    text-decoration: none; 
+    decoration: none; 
+    color: white;
+}
+
 .flex-container {
     display: flex;
     width: 100%;

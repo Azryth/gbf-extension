@@ -14,17 +14,21 @@
         </ul>
     
         <!-- Tab 1-->
-        <div id="damageLogger">
-        <h1>Damage Logger</h1>
+        <div id="damageLogger">        	
+        <a class="clickable" id="saveLog" download="GBFlog.html" style="color:white; position:absolute;">save battlelog</a>
+        <h1>Damage Logger</h1>                    
+        
             <div class="flex-container">
                 
                 <!--left column-->
                 <div class="flex-item">
                 
                     <!--log-->
-                    <h1>Battlelog</h1>
-                    <div id="log-container">
-                        <ul id="log"></ul>
+                    <div id="battleLog">
+                  	  <h1>Battlelog</h1>
+                   	  <div id="log-container">
+                      	<ul id="log"></ul>
+                      </div>
                     </div>
                     
                     <h1>Characters</h1>
@@ -88,13 +92,15 @@
                     </ul>
                 </div>
             </div>
-        
-            <h1>Damage/Turn and Avg Damage/Turn in 1000s</h1>
-            <div class="chartWrapper">
-                <div class="chartAreaWrapper" id="adtcontainer">
-                    <canvas id="graph"></canvas>
-                </div>
-                <canvas id="graphAxis"></canvas>
+        	
+        	<div id="chartSection">
+            	<h1>Damage/Turn and Avg Damage/Turn in 1000s</h1>
+            	<div class="chartWrapper">
+                	<div class="chartAreaWrapper" id="adtcontainer">
+                    	<canvas id="graph"></canvas>
+                	</div>
+                	<canvas id="graphAxis"></canvas>
+            	</div>
             </div>
         
         </div>
