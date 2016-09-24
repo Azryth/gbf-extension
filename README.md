@@ -2,8 +2,13 @@
 ![Sneak peak](https://github.com/Azryth/gbf-extension/blob/images/damageLogger.PNG?raw=true "Sneak Peak")
 ### What ###
 
-* Chrome GBF extension that logs damage and DATA rates
-* It simply reads out information the server sends to your browser. Nothing more, nothing less.
+* This is a chrome GBF extension that logs damage and DATA rates
+* It simply reads out information the server sends to your browser and formats it
+* It does not request any information from the server
+* Use it to measure the damage output of your setups
+* Or use it to log DA/TA rates of your team members
+
+* This is a work in progress, so watch out for errors and bugs
 
 ### How to set up ###
 
@@ -32,4 +37,4 @@ If you would like to leave some feedback (bugs, opinion, whatever), use this [fo
 * Lots of testing
 * Extra damage from summons are not logged yet
 * Show if debuffs hit/miss (will get complicated)
-* Saving data
+* Refactoring
