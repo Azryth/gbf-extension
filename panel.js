@@ -287,7 +287,9 @@ function appendOthersLog(action, damage) {
     $("#log").prepend("<li class=\"flex-container\"><p class=\"halfsub\">" + action + "</p><p>" + displayNumbers(damage) + "</p></li>");
         
     totalDamage += actionDamage;
-    timedTotalDamage += actionDamage;
+    if(timer != undefined) {
+    	timedTotalDamage += turnDetails.total;
+    }
     actionDamage = 0;
     
     updateStatistics();
