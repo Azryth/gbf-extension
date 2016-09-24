@@ -11,6 +11,10 @@
 
 ### How to set up ###
 
+* Go to Chrome Extensions
+
+![Chrome Extensions](https://github.com/Azryth/gbf-extension/blob/images/images/chromeExtensions.PNG?raw=true "Chrome Extensions")
+
 * Enable Developer mode on Chrome
 
 ![Enable Devmode](https://github.com/Azryth/gbf-extension/blob/images/images/extensionsDevmode.PNG?raw=true "Enable Devmode")
