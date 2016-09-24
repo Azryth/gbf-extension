@@ -7,7 +7,6 @@
 * It does not request any information from the server
 * Use it to measure the damage output of your setups
 * Or use it to log DA/TA rates of your team members
-
 * This is a work in progress, so watch out for errors and bugs
 
 ### How to set up ###
