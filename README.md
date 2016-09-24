@@ -12,8 +12,10 @@
 ### How to set up ###
 
 * Enable Developer mode on Chrome
+
 ![Enable Devmode](https://github.com/Azryth/gbf-extension/blob/images/images/extensionsDevmode.PNG?raw=true "Enable Devmode")
 * Load unpacked extensions
+
 ![Load Extension](https://github.com/Azryth/gbf-extension/blob/images/images/loadExtension.PNG?raw=true "Load Extension")
 * select the folder the extension is located in
 
@@ -24,6 +26,7 @@
 ![Open Devtools](https://github.com/Azryth/gbf-extension/blob/images/images/devtools.PNG?raw=true "Open Devtools")
 * Switch to GBF stats tab
 
+![Switch Tabs](https://github.com/Azryth/gbf-extension/blob/images/images/devtoolsTab.PNG?raw=true "Switch Tabs")
 ### Feedback ###
 
 If you would like to leave some feedback (bugs, opinion, whatever), use this [form](https://docs.google.com/forms/d/e/1FAIpQLSfhruGYJ6cnb4V8rY85WR3LYyJOs0cfIISMhzttRWSdJ8BkuA/viewform)
