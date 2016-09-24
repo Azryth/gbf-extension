@@ -1,5 +1,5 @@
 # GBF Logger #
-
+![Alt text](/../<images>/damageLogger.PNG?raw=true "Sneak Peak")
 ### What ###
 
 * Chrome GBF extension that logs damage and DATA rates
