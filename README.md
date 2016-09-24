@@ -21,6 +21,7 @@
 ### How to use ###
 
 * Open Chrome Devtools
+
 ![Open Devtools](https://github.com/Azryth/gbf-extension/blob/images/images/devtools.PNG?raw=true "Open Devtools")
 * Switch to GBF stats tab
 
