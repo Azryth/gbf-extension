@@ -1,5 +1,5 @@
 # GBF Logger #
-![Sneak peak](https://github.com/Azryth/gbf-extension/blob/images/damageLogger.PNG?raw=true "Sneak Peak")
+![Sneak peak](https://github.com/Azryth/gbf-extension/blob/images/images/damageLogger.PNG?raw=true "Sneak Peak")
 ### What ###
 
 * This is a chrome GBF extension that logs damage and DATA rates
@@ -13,12 +13,15 @@
 ### How to set up ###
 
 * Enable Developer mode on Chrome
+![Enable Devmode](https://github.com/Azryth/gbf-extension/blob/images/images/extensionsDevmode.PNG?raw=true "Enable Devmode")
 * Load unpacked extensions
-* select folder
+![Load Extension](https://github.com/Azryth/gbf-extension/blob/images/images/loadExtension.PNG?raw=true "Load Extension")
+* select the folder the extension is located in
 
 ### How to use ###
 
 * Open Chrome Devtools
+![Open Devtools](https://github.com/Azryth/gbf-extension/blob/images/images/devtools.PNG?raw=true "Open Devtools")
 * Switch to GBF stats tab
 
 ### Feedback ###
