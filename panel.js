@@ -276,7 +276,9 @@ function appendTurnLog(action, damage, turnDetails) {
     item.after(container);
     
     totalDamage += turnDetails.total;
-    timedTotalDamage += turnDetails.total;
+    if(timer != undefined) {
+    	timedTotalDamage += turnDetails.total;
+    }
     
     updateStatistics();
 }
