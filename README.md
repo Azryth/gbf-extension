@@ -35,6 +35,7 @@
 
 If you would like to leave some feedback (bugs, opinion, whatever), use this [form](https://docs.google.com/forms/d/e/1FAIpQLSfhruGYJ6cnb4V8rY85WR3LYyJOs0cfIISMhzttRWSdJ8BkuA/viewform)
 
+For bugs, it'd be cool if you could open an issue on this github so it's easier to keep it organized.
 
 ### Usage Notes ###
 
