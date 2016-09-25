@@ -188,10 +188,10 @@ function appendTurnLog(action, damage, turnDetails) {
         subAction.addClass("sub");
         if (turnDetails.details[i].pos != -1) {
             if(!(turnDetails.details[i].type == "Chain Burst" || (turnDetails.details[i].type == "Single" && turnDetails.details[i].details[0].details.length < 2) || turnDetails.details[i].type == "CA")){
-                subAction.html("\> "+ characterInfo[turnDetails.details[i].pos].name + "(" + turnDetails.details[i].type + ")"); 
+                subAction.html("\> "+ characterInfo[formation[turnDetails.details[i].pos]].name + "(" + turnDetails.details[i].type + ")"); 
                 subItem.addClass("toggleable");
             } else {
-                subAction.text(characterInfo[turnDetails.details[i].pos].name + "(" + turnDetails.details[i].type + ")"); 
+                subAction.text(characterInfo[formation[turnDetails.details[i].pos]].name + "(" + turnDetails.details[i].type + ")"); 
             }            
         } else {
             if( turnDetails.details[i].type == "Chain Burst") {
@@ -523,6 +523,7 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                 if (formation.length == 0) {
                     formation = [0, 1, 2, 3];
                 }
+                var newFormation = formation.slice(0);
                 var data = JSON.parse(body);
                 var scenario = data.scenario;
                 //safety check
@@ -625,7 +626,7 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                         }
                         
                     } else if (scenario[i].cmd == "replace" ) {
-                        formation[scenario[i].pos] = scenario[i].npc;
+                        newFormation[scenario[i].pos] = scenario[i].npc;
                     }
                     
                     //increase individual character totals
@@ -657,6 +658,8 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                     
                     updateadtChart();
                 }
+
+                formation = newFormation;
                 
                 turnDetails = { //reset
                     total: 0,
