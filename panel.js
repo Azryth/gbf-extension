@@ -631,13 +631,13 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                     
                     //increase individual character totals
                     if(charaDetails.pos != -1) {
-                        characterInfo[formation[charaDetails.pos]].attackDamage += charaDetails.total;
+                        characterInfo[newFormation[charaDetails.pos]].attackDamage += charaDetails.total;
                         if(charaDetails.type == "Double") {
-                            characterInfo[formation[charaDetails.pos]].das++;
+                            characterInfo[newFormation[charaDetails.pos]].das++;
                         } else if ( charaDetails.type == "Triple") {
-                            characterInfo[formation[charaDetails.pos]].tas++;
+                            characterInfo[newFormation[charaDetails.pos]].tas++;
                         } else if ( charaDetails.type == "CA") {
-                            characterInfo[formation[charaDetails.pos]].cas++;
+                            characterInfo[newFormation[charaDetails.pos]].cas++;
                         }
                     }
                     charaDetails = { //reset
@@ -684,6 +684,7 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                 if (formation.length == 0) {
                     formation = [0, 1, 2, 3];
                 }
+                var newFormation = formation.slice(0);
                 var data = JSON.parse(body);
                 var scenario = data.scenario;
                 var skillName = "";
@@ -722,14 +723,14 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                         
                         updateBossInfo();
                     } else if (scenario[i].cmd == "replace" ) {
-                        formation[scenario[i].pos] = scenario[i].npc;
+                        newFormation[scenario[i].pos] = scenario[i].npc;
                     }
                 }
                 
                 if(skillName != "") {
                     skillsUsed++;
                     if(actionDamage != 0) {
-                        characterInfo[formation[character]].skillDamage += actionDamage;
+                        characterInfo[newFormation[character]].skillDamage += actionDamage;
                         totalSkillDamage += actionDamage;
                         turnDamage += actionDamage;
                         appendOthersLog(skillName, actionDamage);
@@ -737,6 +738,8 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                         appendOthersLog(skillName, "");
                     }
                 }
+                
+                formation = newFormation;
                 
                 //status at the end of ability
                 var status = data.status;
@@ -752,6 +755,7 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                 if (formation.length == 0) {
                     formation = [0, 1, 2, 3];
                 }
+                var newFormation = formation.slice(0);
                 var data = JSON.parse(body);
                 var scenario = data.scenario;
                 var summonName = "";
@@ -794,7 +798,7 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                         
                         updateBossInfo();
                     } else if (scenario[i].cmd == "replace" ) {
-                        formation[scenario[i].pos] = scenario[i].npc;
+                        newFormation[scenario[i].pos] = scenario[i].npc;
                     }
                 }
                 if(summonName != "") {
@@ -807,6 +811,7 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                         appendOthersLog(summonName, "");
                     }
                 }
+                formation = newFormation;
                 
                 //status at the end of summon
                 var status = data.status;
