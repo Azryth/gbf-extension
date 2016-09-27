@@ -86,7 +86,7 @@ function updateCharacterInfo() {
         character = $("<li>");
         character.addClass("flex-container");
         character.addClass("toggleable");
-        character.html("<p>\> " + characterInfo[i].name +"</p>" + "<p>" + displayNumbers(characterInfo[i].skillDamage + characterInfo[i].attackDamage) + "</p>");
+        character.html("<p>\> " + characterInfo[i].name +"</p>" + "<p>" + displayNumbers(characterInfo[i].skillDamage + characterInfo[i].attackDamage + characterInfo[i].ougiDamage) + "</p>");
         
         $("#characterInfo").append(character);
         
