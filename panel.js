@@ -407,8 +407,6 @@ function resetDamage() {
         characterInfo[i].cas = 0;
     }
 
-    console.log(characterInfo);
-    
     updateStatistics();
 }
 
