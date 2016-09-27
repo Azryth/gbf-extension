@@ -188,7 +188,7 @@ function appendTurnLog(action, damage, turnDetails) {
     container.hide();
     var subItem;
     var subAction;
-    
+
     for(var i = 0; i < turnDetails.details.length; i++) { //character
         //container
         subItem = $("<li>");
@@ -198,7 +198,7 @@ function appendTurnLog(action, damage, turnDetails) {
         subAction = $("<p>");
         subAction.addClass("sub");
         if (turnDetails.details[i].pos != -1) {
-            if(!(turnDetails.details[i].type == "Chain Burst" || (turnDetails.details[i].type == "Single" && turnDetails.details[i].details[0].details.length < 2) || turnDetails.details[i].type == "CA")){
+            if(!(turnDetails.details[i].type == "Chain Burst" || (turnDetails.details[i].type == "Single" && turnDetails.details[i].details[0].details.length < 2) || (turnDetails.details[i].type == "Counter" && turnDetails.details[i].details.length < 2) || turnDetails.details[i].type == "CA")){
                 subAction.html("\> "+ characterInfo[formation[turnDetails.details[i].pos]].name + "(" + turnDetails.details[i].type + ")"); 
                 subItem.addClass("toggleable");
             } else {
@@ -217,7 +217,7 @@ function appendTurnLog(action, damage, turnDetails) {
         
         container.append(subItem); 
         //action details if needed, i.e. not single attack, not charge attack, not chain burst
-        if(!(turnDetails.details[i].type == "Chain Burst" || (turnDetails.details[i].type == "Single" && turnDetails.details[i].details[0].details.length < 2) || turnDetails.details[i].type == "CA")){
+        if(!(turnDetails.details[i].type == "Chain Burst" || (turnDetails.details[i].type == "Single" && turnDetails.details[i].details[0].details.length < 2) || turnDetails.details[i].type == "CA" || (turnDetails.details[i].type == "Counter" && turnDetails.details[i].details.length < 2))){
             var subContainer = $("<div>");
             subContainer.hide();
             var subsubItem;
