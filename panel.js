@@ -537,8 +537,7 @@ var characterInfo = [ //character info with name, damage dealt
         cas: 0
     },
 ]; 
-formation = []; // length 4 array. Each position holds the character that is in the position of the index
-noFormationInfo = false; //flag in case the logger is opened when already in battle
+var formation = []; // length 4 array. Each position holds the character that is in the position of the index
 var skillsUsed = 0;
 var summonsUsed = 0;
 
@@ -939,6 +938,20 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
     }
 });
 
+function init() {
+    chrome.devtools.inspectedWindow.eval("Game.view.setupView.pJsnData.formation", (res, err) => {
+        if (!err) formation = res.map(parseInt);
+    });
+    chrome.devtools.inspectedWindow.eval("Game.view.setupView.pJsnData.player", (playerInfo, err) => {
+        if (!err) {
+            for (var i = 0; i < playerInfo.number; i++) {
+                characterInfo[i].name = playerInfo.param[i].name;
+            }
+        }
+    });
+}
+
+init();
 
 //--------------------------------------------------------------
 ////////////
