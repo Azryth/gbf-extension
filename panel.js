@@ -577,10 +577,18 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                 };
                 var perChara = [];
                 var bossAttacked = false;
+                var counterCount = 0;
                 for (var i = 0; i < scenario.length; i++) { 
                     //normal attacks
                     if(scenario[i].cmd == "attack" && scenario[i].from == "player") {
-                        var j
+                        var j;
+                        if (bossAttacked) {
+                            // Hack to make counter attacks the same as all the other attacks
+                            // which they honestly should be by default...
+                            // Cygames why is your API so damn weird?
+                            scenario[i].damage = [scenario[i].damage[counterCount]];
+                            counterCount++;
+                        }
                         for (j = 0; j < scenario[i].damage.length; j++) { //loop for character turn (Single, DA, TA)
                             for(var k = 0; k < scenario[i].damage[j].length; k++) { //loop for attack components (extra damage)
                                 attackDetails.total += scenario[i].damage[j][k].value;
