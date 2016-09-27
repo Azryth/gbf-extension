@@ -940,7 +940,7 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
 
 function init() {
     chrome.devtools.inspectedWindow.eval("Game.view.setupView.pJsnData.formation", (res, err) => {
-        if (!err) formation = res.map(parseInt);
+        if (!err) formation = res;
     });
     chrome.devtools.inspectedWindow.eval("Game.view.setupView.pJsnData.player", (playerInfo, err) => {
         if (!err) {
