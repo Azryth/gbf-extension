@@ -86,7 +86,7 @@ function updateCharacterInfo() {
         character = $("<li>");
         character.addClass("flex-container");
         character.addClass("toggleable");
-        character.html("<p>\> " + characterInfo[i].name +"</p>" + "<p>" + displayNumbers(characterInfo[i].skillDamage + characterInfo[i].attackDamage) + "</p>");
+        character.html("<p>\> " + characterInfo[i].name +"</p>" + "<p>" + displayNumbers(characterInfo[i].skillDamage + characterInfo[i].attackDamage + characterInfo[i].ougiDamage) + "</p>");
         
         $("#characterInfo").append(character);
         
@@ -105,6 +105,19 @@ function updateCharacterInfo() {
         
         p = $("<p>");
         p.text(displayNumbers(characterInfo[i].attackDamage));
+        damageDetail.append(p);
+        breakdown.append(damageDetail);
+
+        //ougi damage
+        damageDetail = $("<li>");
+        damageDetail.addClass("flex-container");
+        var p = $("<p>");
+        p.addClass("sub");
+        p.text("ougi damage");
+        damageDetail.append(p);
+
+        p = $("<p>");
+        p.text(displayNumbers(characterInfo[i].ougiDamage));
         damageDetail.append(p);
         breakdown.append(damageDetail);
         
@@ -137,21 +150,19 @@ function updateCharacterInfo() {
     }
 }
 
-function updateCharacterDATAInfo() {
-    $("#characterDATAInfo").html("");
+function updateCharacterAutoInfo() {
+    $("#characterAutoInfo").html("");
     for (var i = 0; i < characterInfo.length; i++) {
-        
-        if ((turnNumber - characterInfo[i].tas - characterInfo[i].cas) != 0) {
-            var daRate = (characterInfo[i].das / (turnNumber - characterInfo[i].tas - characterInfo[i].cas) * 100).toFixed(2);
-        } else {
-            var daRate = 0;
-        }
-        if ((turnNumber - characterInfo[i].cas) != 0) {
-            var taRate = (characterInfo[i].tas / (turnNumber - characterInfo[i].cas) * 100 ).toFixed(2);
-        } else {
-            taRate = 0;
-        }
-        $("#characterDATAInfo").append("<div class=\"character\"><li class=\"flex-container\"><p>" + characterInfo[i].name +"</p></li><li class=\"flex-container\"><p class=\"sub\">DA rate</p><p>" + daRate + "%</p></li><li class=\"flex-container\"><p class=\"sub\">TA rate</p><p>" + taRate + "%</p></li><div>")
+        var avgDmg = "N/A";
+        var daRate = "N/A";
+        var taRate = "N/A";
+        if (characterInfo[i].attacks != 0)
+            avgDmg = (characterInfo[i].attackDamage / (characterInfo[i].attacks)).toFixed(2);
+        if ((characterInfo[i].turns - characterInfo[i].tas - characterInfo[i].cas) != 0)
+            daRate = (characterInfo[i].das / (characterInfo[i].turns - characterInfo[i].tas - characterInfo[i].cas) * 100).toFixed(2) + "%";
+        if ((characterInfo[i].turns - characterInfo[i].cas) != 0)
+            taRate = (characterInfo[i].tas / (characterInfo[i].turns - characterInfo[i].cas) * 100 ).toFixed(2) + "%";
+        $("#characterAutoInfo").append("<div class=\"character\"><li class=\"flex-container\"><p>" + characterInfo[i].name +"</p></li><li class=\"flex-container\"><p class=\"sub\">Turns in combat</p><p>" + displayNumbers(characterInfo[i].turns) + "</p></li><li class=\"flex-container\"><p class=\"sub\">Average autoattack damage</p><p>" + displayNumbers(avgDmg) + "</p></li><li class=\"flex-container\"><p class=\"sub\">DA rate</p><p>" + daRate + "</p></li><li class=\"flex-container\"><p class=\"sub\">TA rate</p><p>" + taRate + "</p></li><div>");
     }
 }
 
@@ -387,11 +398,15 @@ function resetDamage() {
     //character info
     for(var i = 0; i < characterInfo.length; i++) {
         characterInfo[i].attackDamage = 0;
+        characterInfo[i].ougiDamage = 0;
         characterInfo[i].skillDamage = 0;
+        characterInfo[i].turns = 0;
+        characterInfo[i].attacks = 0;
         characterInfo[i].das = 0;
         characterInfo[i].tas = 0;
+        characterInfo[i].cas = 0;
     }
-    
+
     updateStatistics();
 }
 
@@ -458,7 +473,10 @@ var characterInfo = [ //character info with name, damage dealt
     { //first character (i.e. Gran/Djeeta)
         name: "Ally 1",
         attackDamage: 0,
+        ougiDamage: 0,
         skillDamage: 0,
+        turns: 0, // number of turns taken
+        attacks: 0, // number of autoattacks (turns + das + 2*tas)
         das: 0,
         tas: 0,
         cas: 0
@@ -466,7 +484,10 @@ var characterInfo = [ //character info with name, damage dealt
     { //second character
         name: "Ally 2",
         attackDamage: 0,
+        ougiDamage: 0,
         skillDamage: 0,
+        turns: 0,
+        attacks: 0,
         das: 0,
         tas: 0,
         cas: 0
@@ -474,7 +495,10 @@ var characterInfo = [ //character info with name, damage dealt
     { //third character
         name: "Ally 3",
         attackDamage: 0,
+        ougiDamage: 0,
         skillDamage: 0,
+        turns: 0,
+        attacks: 0,
         das: 0,
         tas: 0,
         cas: 0
@@ -482,7 +506,10 @@ var characterInfo = [ //character info with name, damage dealt
     { //fourth character
         name: "Ally 4",
         attackDamage: 0,
+        ougiDamage: 0,
         skillDamage: 0,
+        turns: 0,
+        attacks: 0,
         das: 0,
         tas: 0,
         cas: 0
@@ -490,7 +517,10 @@ var characterInfo = [ //character info with name, damage dealt
     { //fifth character
         name: "Ally 5",
         attackDamage: 0,
+        ougiDamage: 0,
         skillDamage: 0,
+        turns: 0,
+        attacks: 0,
         das: 0,
         tas: 0,
         cas: 0
@@ -498,7 +528,10 @@ var characterInfo = [ //character info with name, damage dealt
     { //sixth character
         name: "Ally 6",
         attackDamage: 0,
+        ougiDamage: 0,
         skillDamage: 0,
+        turns: 0,
+        attacks: 0,
         das: 0,
         tas: 0,
         cas: 0
@@ -631,13 +664,22 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                     
                     //increase individual character totals
                     if(charaDetails.pos != -1) {
-                        characterInfo[newFormation[charaDetails.pos]].attackDamage += charaDetails.total;
-                        if(charaDetails.type == "Double") {
-                            characterInfo[newFormation[charaDetails.pos]].das++;
+                        var pos = newFormation[charaDetails.pos];
+                        characterInfo[pos].turns++;
+                        if (charaDetails.type == "Single") {
+                            characterInfo[pos].attackDamage += charaDetails.total;
+                            characterInfo[pos].attacks++;
+                        } else if (charaDetails.type == "Double") {
+                            characterInfo[pos].attackDamage += charaDetails.total;
+                            characterInfo[pos].das++;
+                            characterInfo[pos].attacks += 2;
                         } else if ( charaDetails.type == "Triple") {
-                            characterInfo[newFormation[charaDetails.pos]].tas++;
+                            characterInfo[pos].attackDamage += charaDetails.total;
+                            characterInfo[pos].tas++;
+                            characterInfo[pos].attacks += 3;
                         } else if ( charaDetails.type == "CA") {
-                            characterInfo[newFormation[charaDetails.pos]].cas++;
+                            characterInfo[pos].ougiDamage += charaDetails.total;
+                            characterInfo[pos].cas++;
                         }
                     }
                     charaDetails = { //reset
@@ -665,7 +707,7 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                     total: 0,
                     details: []
                 };
-                updateCharacterDATAInfo();
+                updateCharacterAutoInfo();
                 
                 //status at the end of turn
                 var status = data.status;
@@ -855,7 +897,7 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                 }
                 
                 updateCharacterInfo();
-                updateCharacterDATAInfo()
+                updateCharacterAutoInfo();
                 
                 //team formation
                 if (startinfo.formation != undefined) {
