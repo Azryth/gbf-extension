@@ -576,6 +576,7 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                     details: [],
                 };
                 var perChara = [];
+                var bossAttacked = false;
                 for (var i = 0; i < scenario.length; i++) { 
                     //normal attacks
                     if(scenario[i].cmd == "attack" && scenario[i].from == "player") {
@@ -594,7 +595,10 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                         } 
                         //per character information
                         charaDetails.pos = Number(scenario[i].pos);
-                        if( j == 1) {
+                        if (bossAttacked) {
+                            // if you're attacking after the boss has, you must be countering (?)
+                            charaDetails.type = "Counter";
+                        } else if( j == 1) {
                             charaDetails.type = "Single";
                         } else if (j == 2) {
                             charaDetails.type = "Double";
@@ -659,6 +663,8 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                         
                     } else if (scenario[i].cmd == "replace" ) {
                         newFormation[scenario[i].pos] = scenario[i].npc;
+                    } else if (scenario[i].cmd == "attack" && scenario[i].from == "boss") {
+                        bossAttacked = true;
                     }
                     
                     //increase individual character totals
