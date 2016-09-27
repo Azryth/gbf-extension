@@ -670,16 +670,16 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                     //increase individual character totals
                     if(charaDetails.pos != -1) {
                         var pos = newFormation[charaDetails.pos];
-                        characterInfo[pos].turns++;
-                        if (charaDetails.type == "Single") {
+                        if (charaDetails.type != "Counter") characterInfo[pos].turns++;
+                        if (charaDetails.type != "CA")
                             characterInfo[pos].attackDamage += charaDetails.total;
+
+                        if (charaDetails.type == "Single") {
                             characterInfo[pos].attacks++;
                         } else if (charaDetails.type == "Double") {
-                            characterInfo[pos].attackDamage += charaDetails.total;
                             characterInfo[pos].das++;
                             characterInfo[pos].attacks += 2;
                         } else if ( charaDetails.type == "Triple") {
-                            characterInfo[pos].attackDamage += charaDetails.total;
                             characterInfo[pos].tas++;
                             characterInfo[pos].attacks += 3;
                         } else if ( charaDetails.type == "CA") {
