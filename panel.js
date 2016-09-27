@@ -137,10 +137,10 @@ function updateCharacterInfo() {
     }
 }
 
-function updateCharacterDATAInfo() {
-    $("#characterDATAInfo").html("");
+function updateCharacterAutoInfo() {
+    $("#characterAutoInfo").html("");
     for (var i = 0; i < characterInfo.length; i++) {
-        
+        var avgDmg = characterInfo.attackDamage / (turnNumber + characterInfo[i].das + characterInfo[i].tas);
         if ((turnNumber - characterInfo[i].tas - characterInfo[i].cas) != 0) {
             var daRate = (characterInfo[i].das / (turnNumber - characterInfo[i].tas - characterInfo[i].cas) * 100).toFixed(2);
         } else {
@@ -151,7 +151,7 @@ function updateCharacterDATAInfo() {
         } else {
             taRate = 0;
         }
-        $("#characterDATAInfo").append("<div class=\"character\"><li class=\"flex-container\"><p>" + characterInfo[i].name +"</p></li><li class=\"flex-container\"><p class=\"sub\">DA rate</p><p>" + daRate + "%</p></li><li class=\"flex-container\"><p class=\"sub\">TA rate</p><p>" + taRate + "%</p></li><div>")
+        $("#characterAutoInfo").append("<div class=\"character\"><li class=\"flex-container\"><p>" + characterInfo[i].name +"</p></li><li class=\"flex-container\"><p class=\"sub\">Average autoattack damage</p><p>" + displayNumbers(avgDmg) + "</p></li><li class=\"flex-container\"><p class=\"sub\">DA rate</p><p>" + daRate + "%</p></li><li class=\"flex-container\"><p class=\"sub\">TA rate</p><p>" + taRate + "%</p></li><div>")
     }
 }
 
@@ -665,7 +665,7 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                     total: 0,
                     details: []
                 };
-                updateCharacterDATAInfo();
+                updateCharacterAutoInfo();
                 
                 //status at the end of turn
                 var status = data.status;
@@ -855,7 +855,7 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                 }
                 
                 updateCharacterInfo();
-                updateCharacterDATAInfo()
+                updateCharacterAutoInfo()
                 
                 //team formation
                 if (startinfo.formation != undefined) {
