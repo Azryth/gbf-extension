@@ -188,7 +188,7 @@ function appendTurnLog(action, damage, turnDetails) {
     container.hide();
     var subItem;
     var subAction;
-    
+
     for(var i = 0; i < turnDetails.details.length; i++) { //character
         //container
         subItem = $("<li>");
@@ -198,7 +198,7 @@ function appendTurnLog(action, damage, turnDetails) {
         subAction = $("<p>");
         subAction.addClass("sub");
         if (turnDetails.details[i].pos != -1) {
-            if(!(turnDetails.details[i].type == "Chain Burst" || (turnDetails.details[i].type == "Single" && turnDetails.details[i].details[0].details.length < 2) || turnDetails.details[i].type == "CA")){
+            if(!(turnDetails.details[i].type == "Chain Burst" || (turnDetails.details[i].type == "Single" && turnDetails.details[i].details[0].details.length < 2) || (turnDetails.details[i].type == "Counter" && turnDetails.details[i].details.length < 2) || turnDetails.details[i].type == "CA")){
                 subAction.html("\> "+ characterInfo[formation[turnDetails.details[i].pos]].name + "(" + turnDetails.details[i].type + ")"); 
                 subItem.addClass("toggleable");
             } else {
@@ -217,7 +217,7 @@ function appendTurnLog(action, damage, turnDetails) {
         
         container.append(subItem); 
         //action details if needed, i.e. not single attack, not charge attack, not chain burst
-        if(!(turnDetails.details[i].type == "Chain Burst" || (turnDetails.details[i].type == "Single" && turnDetails.details[i].details[0].details.length < 2) || turnDetails.details[i].type == "CA")){
+        if(!(turnDetails.details[i].type == "Chain Burst" || (turnDetails.details[i].type == "Single" && turnDetails.details[i].details[0].details.length < 2) || turnDetails.details[i].type == "CA" || (turnDetails.details[i].type == "Counter" && turnDetails.details[i].details.length < 2))){
             var subContainer = $("<div>");
             subContainer.hide();
             var subsubItem;
@@ -576,10 +576,19 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                     details: [],
                 };
                 var perChara = [];
+                var bossAttacked = false;
+                var counterCount = 0;
                 for (var i = 0; i < scenario.length; i++) { 
                     //normal attacks
                     if(scenario[i].cmd == "attack" && scenario[i].from == "player") {
-                        var j
+                        var j;
+                        if (bossAttacked) {
+                            // Hack to make counter attacks the same as all the other attacks
+                            // which they honestly should be by default...
+                            // Cygames why is your API so damn weird?
+                            scenario[i].damage = [scenario[i].damage[counterCount]];
+                            counterCount++;
+                        }
                         for (j = 0; j < scenario[i].damage.length; j++) { //loop for character turn (Single, DA, TA)
                             for(var k = 0; k < scenario[i].damage[j].length; k++) { //loop for attack components (extra damage)
                                 attackDetails.total += scenario[i].damage[j][k].value;
@@ -594,7 +603,10 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                         } 
                         //per character information
                         charaDetails.pos = Number(scenario[i].pos);
-                        if( j == 1) {
+                        if (bossAttacked) {
+                            // if you're attacking after the boss has, you must be countering (?)
+                            charaDetails.type = "Counter";
+                        } else if( j == 1) {
                             charaDetails.type = "Single";
                         } else if (j == 2) {
                             charaDetails.type = "Double";
@@ -659,21 +671,23 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                         
                     } else if (scenario[i].cmd == "replace" ) {
                         newFormation[scenario[i].pos] = scenario[i].npc;
+                    } else if (scenario[i].cmd == "attack" && scenario[i].from == "boss") {
+                        bossAttacked = true;
                     }
                     
                     //increase individual character totals
                     if(charaDetails.pos != -1) {
                         var pos = newFormation[charaDetails.pos];
-                        characterInfo[pos].turns++;
-                        if (charaDetails.type == "Single") {
+                        if (charaDetails.type != "Counter") characterInfo[pos].turns++;
+                        if (charaDetails.type != "CA")
                             characterInfo[pos].attackDamage += charaDetails.total;
+
+                        if (charaDetails.type == "Single") {
                             characterInfo[pos].attacks++;
                         } else if (charaDetails.type == "Double") {
-                            characterInfo[pos].attackDamage += charaDetails.total;
                             characterInfo[pos].das++;
                             characterInfo[pos].attacks += 2;
                         } else if ( charaDetails.type == "Triple") {
-                            characterInfo[pos].attackDamage += charaDetails.total;
                             characterInfo[pos].tas++;
                             characterInfo[pos].attacks += 3;
                         } else if ( charaDetails.type == "CA") {
