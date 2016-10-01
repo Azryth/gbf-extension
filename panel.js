@@ -626,7 +626,15 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                         for (var j = 0; j < scenario[i].list.length; j++) {
                             charaDetails.total += scenario[i].list[j].damage[0].value;
                         }
-                        
+
+                        // checking for additional damage on ougi (Yoda, Juliet, etc.)
+                        // TODO: this should probably make the ougi expandable
+                        if (scenario[i+1].cmd == "damage" && scenario[i+1].mode == "parallel") {
+                            for (var j = 0; j < scenario[i+1].list.length; j++) {
+                                charaDetails.total += scenario[i+1].list[j].value;
+                            }
+                        }
+
                         charaDetails.type = "CA";
                         charaDetails.pos = Number(scenario[i].pos);
                         //charaDetails.details is empty for charge attack
