@@ -622,9 +622,10 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                         if(scenario[i].count > 1) {
                             chainBurst = true;
                         }
-
-                        for (var j = 0; j < scenario[i].list.length; j++) {
-                            charaDetails.total += scenario[i].list[j].damage[0].value;
+                        if(scenario[i].list !== undefined) {
+                            for (var j = 0; j < scenario[i].list.length; j++) {
+                                charaDetails.total += scenario[i].list[j].damage[0].value;
+                            }
                         }
 
                         // checking for additional damage on ougi (Yoda, Juliet, etc.)
@@ -637,7 +638,7 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
 
                         charaDetails.type = "CA";
                         charaDetails.pos = Number(scenario[i].pos);
-                        //charaDetails.details is empty for charge attack
+                        //charaDetails.details is empty for charge attack FIXME: add details for additional damage
                         
                         turnDetails.total += charaDetails.total;
                         turnDetails.details.push(charaDetails);
