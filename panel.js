@@ -37,6 +37,34 @@ function displayNumbers(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "'");
 }
 
+/*
+Formats the key value pair in a li and returns the html jQuery node
+classes: string array of classes that should be attached to the base node
+subNum: indent depth of the key
+*/
+function formatLiData(key, value, subNum, classes=[]) {
+  //create base element
+  var li = $("<li>");
+  for(var i = 0; i < classes.length; i++) {
+    li.addClass(classes[i]);
+  }
+
+  //key part
+  var keyContainer = $("<p>");
+  if(subNum > 0) {
+    keyContainer.addClass("sub" + subNum);
+  }
+  keyContainer.text(key);
+  li.append(keyContainer);
+
+  //value part
+  var valueContainer = $("<p>");
+  valueContainer.text(value);
+  li.append(valueContainer);
+
+  return li;
+}
+
 function updateStatistics() {
     var time = elapsed_seconds;
     $("#totalDamage").text(displayNumbers(totalDamage));
@@ -44,7 +72,7 @@ function updateStatistics() {
     $("#totalSkillDamage").text(displayNumbers(totalSkillDamage));
     $("#totalChainBurst").text(displayNumbers(totalChainBurstDamage));
     $("#totalSummonDamage").text(displayNumbers(totalSummonDamage));
-    
+
     if (turnNumber != 0) {
         $("#damageTurn").text(displayNumbers(Math.round(totalDamage / turnNumber)) + " (" + turnNumber + " turns)");
         $("#skillsTurn").text((skillsUsed / turnNumber).toFixed(2) + " (" + skillsUsed + " skills)");
@@ -54,7 +82,7 @@ function updateStatistics() {
         $("#skillsTurn").text("0");
         $("#summonsTurn").text("0");
     }
-    
+
     updateCharacterInfo();
 }
 
@@ -62,10 +90,22 @@ function updateStatistics() {
 Clears all boss information and adds the current one
 */
 function updateBossInfo() {
+    //clear contents
     $("#enemyInfo").html("");
+
     for (var i = 0; i < bossInfo.length; i++) {
         if ( bossInfo[i] != undefined && bossInfo[i].name != undefined) {
-            $("#enemyInfo").append("<li class=\"flex-container\"><p>" + bossInfo[i].name +"</p></li><li class=\"flex-container\"><p class=\"sub\">Max HP</p><p>" + displayNumbers(bossInfo[i].maxhp) + "</p></li><li class=\"flex-container\"><p class=\"sub\">HP</p><p>" + displayNumbers(bossInfo[i].hp) + " (" + displayNumbers((Number(bossInfo[i].hp) / Number(bossInfo[i].maxhp) * 100).toFixed(2)) + "%)</p></li>")
+            //current hp + percentage
+            var hpString = displayNumbers(bossInfo[i].hp);
+            var percentage = (Number(bossInfo[i].hp) / Number(bossInfo[i].maxhp) * 100).toFixed(2);
+            hpString += " (" + displayNumbers(percentage) + "%)";
+
+            //update enemy info
+            $("#enemyInfo").append(
+              formatLiData(bossInfo[i].name, "", 0, ["flex-container"]),
+              formatLiData("Max HP", displayNumbers(bossInfo[i].maxhp), 1, ["flex-container"]),
+              formatLiData("HP", hpString, 1, ["flex-container"])
+            );
         }
     }
 }
@@ -76,71 +116,37 @@ function updateCharacterInfo() {
     $("#characterInfo").children(":nth-child(even)").each(function () {
         isVisible.push($(this).is(":visible"));
     });
-    
+
     //clear the contents
     $("#characterInfo").html("");
-    
+
     //add new content
     for (var i = 0; i < characterInfo.length; i++) {
-        
-        character = $("<li>");
-        character.addClass("flex-container");
-        character.addClass("toggleable");
-        character.html("<p>\> " + characterInfo[i].name +"</p>" + "<p>" + displayNumbers(characterInfo[i].skillDamage + characterInfo[i].attackDamage + characterInfo[i].ougiDamage) + "</p>");
-        
+
+        var characterTotalDamage = characterInfo[i].skillDamage + characterInfo[i].attackDamage + characterInfo[i].ougiDamage;
+        var character = formatLiData("\> " + characterInfo[i].name, displayNumbers(characterTotalDamage), 0, ["flex-container", "toggleable"]);
         $("#characterInfo").append(character);
-        
+
         var breakdown = $("<div>");
         if(!isVisible[i]) {
             breakdown.hide();
         }
-        
+
         //attack damage
-        var damageDetail = $("<li>");
-        damageDetail.addClass("flex-container");
-        var p = $("<p>");
-        p.addClass("sub");
-        p.text("attack damage");
-        damageDetail.append(p);
-        
-        p = $("<p>");
-        p.text(displayNumbers(characterInfo[i].attackDamage));
-        damageDetail.append(p);
-        breakdown.append(damageDetail);
-
+        breakdown.append(formatLiData("attack damage", characterInfo[i].attackDamage, 1, ["flex-container"]));
         //ougi damage
-        damageDetail = $("<li>");
-        damageDetail.addClass("flex-container");
-        var p = $("<p>");
-        p.addClass("sub");
-        p.text("ougi damage");
-        damageDetail.append(p);
-
-        p = $("<p>");
-        p.text(displayNumbers(characterInfo[i].ougiDamage));
-        damageDetail.append(p);
-        breakdown.append(damageDetail);
-        
+        breakdown.append(formatLiData("ougi damage", characterInfo[i].ougiDamage, 1, ["flex-container"]));
         //skill damage
-        damageDetail = $("<li>");
-        damageDetail.addClass("flex-container");
-        var p = $("<p>");
-        p.addClass("sub");
-        p.text("skill damage");
-        damageDetail.append(p);
-        
-        p = $("<p>");
-        p.text(displayNumbers(characterInfo[i].skillDamage));
-        damageDetail.append(p);
-        breakdown.append(damageDetail);
+        breakdown.append(formatLiData("skill damage", characterInfo[i].skillDamage, 1, ["flex-container"]));
+
         breakdown.append($("</br>"));
         $("#characterInfo").append(breakdown);
         character.click(function() {
             $(this).next().toggle();
         });
-        
-        //$("#characterInfo").append("<li class=\"flex-container\"><p>" + characterInfo[i].name +"</p></li><li class=\"flex-container\"><p class=\"sub\">total damage</p><p>" + displayNumbers(characterInfo[i].skillDamage + characterInfo[i].attackDamage) + "</p></li>")
+
     }
+    //precautionary note in case character formation and names did not load
     if(characterInfo[0].name == "Ally 1") {
         var note = $("<p>");
         note.addClass("warning");
@@ -162,7 +168,7 @@ function updateCharacterAutoInfo() {
             daRate = (characterInfo[i].das / (characterInfo[i].turns - characterInfo[i].tas - characterInfo[i].cas) * 100).toFixed(2) + "%";
         if ((characterInfo[i].turns - characterInfo[i].cas) != 0)
             taRate = (characterInfo[i].tas / (characterInfo[i].turns - characterInfo[i].cas) * 100 ).toFixed(2) + "%";
-        $("#characterAutoInfo").append("<div class=\"character\"><li class=\"flex-container\"><p>" + characterInfo[i].name +"</p></li><li class=\"flex-container\"><p class=\"sub\">Turns in combat</p><p>" + displayNumbers(characterInfo[i].turns) + "</p></li><li class=\"flex-container\"><p class=\"sub\">Average autoattack damage</p><p>" + displayNumbers(avgDmg) + "</p></li><li class=\"flex-container\"><p class=\"sub\">DA rate</p><p>" + daRate + "</p></li><li class=\"flex-container\"><p class=\"sub\">TA rate</p><p>" + taRate + "</p></li><div>");
+        $("#characterAutoInfo").append("<div class=\"character\"><li class=\"flex-container\"><p>" + characterInfo[i].name +"</p></li><li class=\"flex-container\"><p class=\"sub2\">Turns in combat</p><p>" + displayNumbers(characterInfo[i].turns) + "</p></li><li class=\"flex-container\"><p class=\"sub2\">Average autoattack damage</p><p>" + displayNumbers(avgDmg) + "</p></li><li class=\"flex-container\"><p class=\"sub2\">DA rate</p><p>" + daRate + "</p></li><li class=\"flex-container\"><p class=\"sub2\">TA rate</p><p>" + taRate + "</p></li><div>");
     }
 }
 
@@ -174,16 +180,16 @@ function showRaidId() {
 Adds a line to the log containing damage done and action taken
 */
 function appendTurnLog(action, damage, turnDetails) {
-    
+
     //summary
     var item = $("<li>");
     item.addClass("flex-container");
     item.addClass("turn");
     item.addClass("toggleable");
     item.html("<p>\> " + action + "</p><p>" + displayNumbers(damage) + "</p></li>");
-    
-    $("#log").prepend(item); 
-    
+
+    $("#log").prepend(item);
+
     var container = $("<div>");
     container.hide();
     var subItem;
@@ -193,42 +199,42 @@ function appendTurnLog(action, damage, turnDetails) {
         //container
         subItem = $("<li>");
         subItem.addClass("flex-container");
-        
+
         //action name
         subAction = $("<p>");
-        subAction.addClass("sub");
+        subAction.addClass("sub2");
         if (turnDetails.details[i].pos != -1) {
             if(!(turnDetails.details[i].type == "Chain Burst" || (turnDetails.details[i].type == "Single" && turnDetails.details[i].details[0].details.length < 2) || (turnDetails.details[i].type == "Counter" && turnDetails.details[i].details.length < 2) || turnDetails.details[i].type == "CA")){
-                subAction.html("\> "+ characterInfo[formation[turnDetails.details[i].pos]].name + "(" + turnDetails.details[i].type + ")"); 
+                subAction.html("\> "+ characterInfo[formation[turnDetails.details[i].pos]].name + "(" + turnDetails.details[i].type + ")");
                 subItem.addClass("toggleable");
             } else {
-                subAction.text(characterInfo[formation[turnDetails.details[i].pos]].name + "(" + turnDetails.details[i].type + ")"); 
-            }            
+                subAction.text(characterInfo[formation[turnDetails.details[i].pos]].name + "(" + turnDetails.details[i].type + ")");
+            }
         } else {
             if( turnDetails.details[i].type == "Chain Burst") {
                 subAction.text(turnDetails.details[i].type);
             }
         }
         subItem.append(subAction);
-        
+
         subAction = $("<p>");
         subAction.text(displayNumbers(turnDetails.details[i].total));
         subItem.append(subAction);
-        
-        container.append(subItem); 
+
+        container.append(subItem);
         //action details if needed, i.e. not single attack, not charge attack, not chain burst
         if(!(turnDetails.details[i].type == "Chain Burst" || (turnDetails.details[i].type == "Single" && turnDetails.details[i].details[0].details.length < 2) || turnDetails.details[i].type == "CA" || (turnDetails.details[i].type == "Counter" && turnDetails.details[i].details.length < 2))){
             var subContainer = $("<div>");
             subContainer.hide();
             var subsubItem;
             var subsubAction;
-            
+
             for(var j = 0; j < turnDetails.details[i].details.length; j++) { //each attack
                 subsubItem = $("<li>");
                 subsubItem.addClass("flex-container");
                 subsubAction = $("<p>");
-                subsubAction.addClass("subsub");
-                
+                subsubAction.addClass("sub3");
+
                 if ( turnDetails.details[i].details[j].details.length > 1) {
                     subsubAction.html("\> Attack " + (j+1));
                     subsubItem.addClass("toggleable");
@@ -240,18 +246,18 @@ function appendTurnLog(action, damage, turnDetails) {
                 subsubAction.text(displayNumbers(turnDetails.details[i].details[j].total));
                 subsubItem.append(subsubAction);
                 subContainer.append(subsubItem);
-                
+
                 var subsubContainer = $("<div>");
                 subsubContainer.hide();
                 var subsubsubItem;
                 var subsubsubAction;
-                
+
                 if ( turnDetails.details[i].details[j].details.length > 1) {
                     for (var k = 0; k < turnDetails.details[i].details[j].details.length;k++){
                         subsubsubItem = $("<li>");
                         subsubsubItem.addClass("flex-container");
                         subsubsubAction = $("<p>");
-                        subsubsubAction.addClass("subsubsub");
+                        subsubsubAction.addClass("sub4");
                         if( k == 0) {
                             subsubsubAction.text("Normal");
                         } else {
@@ -271,7 +277,7 @@ function appendTurnLog(action, damage, turnDetails) {
                 }
             }
             subContainer.append($("<br/>"));
-            
+
             container.append(subContainer);
             subItem.click(function() {
                 $(this).next().toggle();
@@ -279,52 +285,52 @@ function appendTurnLog(action, damage, turnDetails) {
         }
     }
     container.append($("<br/>"));
-    
+
     item.click(function() {
         $(this).next().toggle();
     });
-      
+
     item.after(container);
-    
+
     totalDamage += turnDetails.total;
     if(timer != undefined) {
     	timedTotalDamage += turnDetails.total;
     }
-    
+
     updateStatistics();
 }
 
 function appendOthersLog(action, damage) {
-    $("#log").prepend("<li class=\"flex-container\"><p class=\"halfsub\">" + action + "</p><p>" + displayNumbers(damage) + "</p></li>");
-        
+    $("#log").prepend("<li class=\"flex-container\"><p class=\"sub1\">" + action + "</p><p>" + displayNumbers(damage) + "</p></li>");
+
     totalDamage += actionDamage;
     if(timer != undefined) {
     	timedTotalDamage += turnDetails.total;
     }
     actionDamage = 0;
-    
+
     updateStatistics();
 }
 
 function updateadtChart() {
-    
+
     adtlabels.push(turnNumber);
     //adtdata.labels = adtlabels.slice(Math.max(0,adtlabels.length - 10), adtlabels.length);
     //adtdata.labels.push(turnNumber);
     adtChart.data.labels.push(turnNumber);
-    
+
     adtdatapoints.push(Math.round(totalDamage / turnNumber / 1000));
     dtdatapoints.push(Math.round(turnDamage / 1000));
-    
+
     //adtChart.data.datasets[0].data = adtdatapoints.slice(Math.max(0, adtdatapoints.length - 10), adtdatapoints.length);
     //adtChart.data.datasets[1].data = dtdatapoints.slice(Math.max(0, dtdatapoints.length - 10), dtdatapoints.length);;
     adtChart.data.datasets[0].data.push(Math.round(totalDamage / turnNumber / 1000));
     adtChart.data.datasets[1].data.push(Math.round(turnDamage / 1000));
-    
+
     adtChart.update();
-    
+
     turnDamage = 0;
-    
+
 }
 
 //--------------------------------------------------------------------------------------
@@ -356,15 +362,15 @@ function startTimer() {
 function clearTimer() {
     if (timer != undefined) {
         clearInterval(timer);
-    } 
-    
+    }
+
     elapsed_seconds = 0;
     timedTotalDamage = 0;
     $('#timer').text("00:00:00");
     $("#damageTime").text("0");
     $("#timedtotalDamage").text("0");
     timer = undefined;
-    
+
     $("#toggleTimer").text("start timer");
 }
 
@@ -388,13 +394,13 @@ function resetDamage() {
     turnNumber = 0;
     skillsUsed = 0;
     summonsUsed = 0;
-    
+
     //chart
     adtChart.data.labels = [];
     adtChart.data.datasets[0].data = [];
     adtChart.data.datasets[1].data = [];
     adtChart.update();
-    
+
     //character info
     for(var i = 0; i < characterInfo.length; i++) {
         characterInfo[i].attackDamage = 0;
@@ -432,11 +438,11 @@ function saveLog() {
 	var head = $("<head>");
 	var body = $("<body>");
 	$("<style type=\"text/css\">html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video { margin: 0;	padding: 0;	border: 0; font-size: 100%;	font: inherit; vertical-align: baseline; } article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section { display: block; } body { line-height: 1; } ol, ul { list-style: none; } blockquote, q { quotes: none; } blockquote:before, blockquote:after, q:before, q:after { content: ''; content: none; } table { border-collapse: collapse; border-spacing: 0; } </style>").appendTo(head);
-	$("<style type=\"text/css\"> body {	font-family: 'Lato', Verdana, Geneva, sans-serif; letter-spacing:0.1vw;	font-size: 1.25vw; line-height: 200%; } h1 { font-size: 2em; margin: 0.25em 0em 1em 0em; text-align: center; } li { font-size: 1.5em; } .flex-container { display: flex; width: 100%; flex-direction: row; flex-wrap: nowrap; justify-content: space-between; } .flex-item { width: 48%; margin: 1em; } .flex-container .halfsub { padding-left: 1em; border-style: none; } .flex-container .sub { padding-left: 2em; border-style: none; } .flex-container .subsub { padding-left: 3em; border-style: none; } .flex-container .subsubsub { padding-left: 4em; }.statSection { border: 0.2px; padding-bottom: 1em; border-bottom-style: solid; } #log-container { height: 50vh; background-color: #e6e6e6; padding: 0em 0.4em 0em 0.4em; overflow-y:scroll; } #log .turn{ border: 0.05em; border-top-style: solid; border-color: whitesmoke; } .character { border: 0.2px; border-bottom-style: solid; margin-top: 1em; } .clock { display:flex; flex-direction: row; justify-content: space-around; text-align: center; margin-bottom: 1em; } .clock h2 { font-size: 2em; } #timer { padding-top: 0.25em; }</style>").appendTo(head);
+	$("<style type=\"text/css\"> body {	font-family: 'Lato', Verdana, Geneva, sans-serif; letter-spacing:0.1vw;	font-size: 1.25vw; line-height: 200%; } h1 { font-size: 2em; margin: 0.25em 0em 1em 0em; text-align: center; } li { font-size: 1.5em; } .flex-container { display: flex; width: 100%; flex-direction: row; flex-wrap: nowrap; justify-content: space-between; } .flex-item { width: 48%; margin: 1em; } .flex-container .sub1 { padding-left: 1em; border-style: none; } .flex-container .sub2 { padding-left: 2em; border-style: none; } .flex-container .sub3 { padding-left: 3em; border-style: none; } .flex-container .sub4 { padding-left: 4em; }.statSection { border: 0.2px; padding-bottom: 1em; border-bottom-style: solid; } #log-container { height: 50vh; background-color: #e6e6e6; padding: 0em 0.4em 0em 0.4em; overflow-y:scroll; } #log .turn{ border: 0.05em; border-top-style: solid; border-color: whitesmoke; } .character { border: 0.2px; border-bottom-style: solid; margin-top: 1em; } .clock { display:flex; flex-direction: row; justify-content: space-around; text-align: center; margin-bottom: 1em; } .clock h2 { font-size: 2em; } #timer { padding-top: 0.25em; }</style>").appendTo(head);
 	$("<link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css\"></style>").appendTo(head);
 	$("<script   src=\"https://code.jquery.com/jquery-3.1.1.min.js\"   integrity=\"sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=\"   crossorigin=\"anonymous\"></script>").appendTo(head);
 	$("<script src=\"https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js\"></script>").appendTo(head);
-	
+
 	$("#tabs").clone(true).appendTo(body);
 	$("<script type=\"text/javascript\"> $(\".toggleable\").each( function() { $(this).click(function() { $(this).next().toggle();}) }) </script>").appendTo(body);
 	$("<script type=\"text/javascript\"> $(function() { $(\"#tabs\").tabs(); });</script>").appendTo(body);
@@ -468,6 +474,7 @@ var totalSkillDamage = 0; //all skill damage
 var totalChainBurstDamage = 0; //damage from all chain bursts
 var turnNumber = 0;
 var raidID = ""; //twitter raidID
+var questID = ""; //Id that identifies the quest instance
 var bossInfo = []; //boss info with name, lv, maxhp, hp
 var characterInfo = [ //character info with name, damage dealt
     { //first character (i.e. Gran/Djeeta)
@@ -536,7 +543,7 @@ var characterInfo = [ //character info with name, damage dealt
         tas: 0,
         cas: 0
     },
-]; 
+];
 var formation = []; // length 4 array. Each position holds the character that is in the position of the index
 var skillsUsed = 0;
 var summonsUsed = 0;
@@ -544,9 +551,9 @@ var summonsUsed = 0;
 chrome.devtools.network.onRequestFinished.addListener(function(req) {
     var reqURL = document.createElement('a');
     reqURL.href = req.request.url;
-    
+
     if(reqURL.hostname == "gbf.game.mbga.jp" || reqURL.hostname == "game.granbluefantasy.jp") {
-        
+
         //i.e. normal_attack_result.json
         var path = reqURL.pathname.split('/')[2];
         //attack
@@ -578,7 +585,7 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                 var perChara = [];
                 var bossAttacked = false;
                 var counterCount = 0;
-                for (var i = 0; i < scenario.length; i++) { 
+                for (var i = 0; i < scenario.length; i++) {
                     //normal attacks
                     if(scenario[i].cmd == "attack" && scenario[i].from == "player") {
                         var j;
@@ -600,7 +607,7 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                                 total: 0,
                                 details: [],
                             };
-                        } 
+                        }
                         //per character information
                         charaDetails.pos = Number(scenario[i].pos);
                         if (bossAttacked) {
@@ -613,18 +620,19 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                         } else if (j == 3) {
                             charaDetails.type = "Triple";
                         }
-                        
+
                         turnDetails.total += charaDetails.total;
                         turnDetails.details.push(charaDetails);
-                    //charge attacks    
+                    //charge attacks
                     } else if (scenario[i].cmd == "special" || scenario[i].cmd == "special_npc") {
                         //enable checking for chainburst
                         if(scenario[i].count > 1) {
                             chainBurst = true;
                         }
-
-                        for (var j = 0; j < scenario[i].list.length; j++) {
+                        if(scenario[i].list !== undefined) {
+                          for (var j = 0; j < scenario[i].list.length; j++) {
                             charaDetails.total += scenario[i].list[j].damage[0].value;
+                          }
                         }
 
                         // checking for additional damage on ougi (Yoda, Juliet, etc.)
@@ -638,10 +646,10 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                         charaDetails.type = "CA";
                         charaDetails.pos = Number(scenario[i].pos);
                         //charaDetails.details is empty for charge attack
-                        
+
                         turnDetails.total += charaDetails.total;
                         turnDetails.details.push(charaDetails);
-                    //chain burst    
+                    //chain burst
                     } else if (chainBurst == true && scenario[i].cmd == "effect" && scenario[i].kind.indexOf("burst") !== -1) {
                         if ((i < scenario.length - 1) && scenario[i + 1].cmd == "damage") {
                             for (var j = 0; j < scenario[i + 1].list.length; j++) {
@@ -649,12 +657,12 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                             }
                             charaDetails.pos = -1;
                             charaDetails.type = "Chain Burst";
-                            
+
                             totalChainBurstDamage += charaDetails.total;
                             turnDetails.total += charaDetails.total;
                             turnDetails.details.push(charaDetails);
                     }
-                    //boss info    
+                    //boss info
                     } else if (scenario[i].cmd == "boss_gauge") {
                         if (bossInfo[scenario[i].pos] != undefined) {
                             bossInfo[scenario[i].pos].hp = scenario[i].hp;
@@ -665,10 +673,10 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                                 hp : scenario[i].hp
                             };
                         }
-                        
+
                         updateBossInfo();
-                        
-                    } else if ((scenario[i].cmd == "die" || scenario[i].cmd == "stop") && scenario[i].to == "boss") { 
+
+                    } else if ((scenario[i].cmd == "die" || scenario[i].cmd == "stop") && scenario[i].to == "boss") {
                         if ( bossInfo[Number(scenario[i].pos)] != undefined) {
                             bossInfo[Number(scenario[i].pos)].hp = "0";
                         } else {
@@ -676,13 +684,13 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                                 name : undefined
                             };
                         }
-                        
+
                     } else if (scenario[i].cmd == "replace" ) {
                         newFormation[scenario[i].pos] = scenario[i].npc;
                     } else if (scenario[i].cmd == "attack" && scenario[i].from == "boss") {
                         bossAttacked = true;
                     }
-                    
+
                     //increase individual character totals
                     if(charaDetails.pos != -1) {
                         var pos = newFormation[charaDetails.pos];
@@ -709,38 +717,38 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                         type: "", //Single, Double, Triple, CA
                         details: [],
                     };
-                    
+
                 }
-                
+
                 if(turnDetails.details.length > 0) {
                     totalTurnDamage += turnDetails.total;
                     turnDamage += turnDetails.total;
                     turnNumber++;
-                    
+
                     appendTurnLog("Turn " + (Number(JSON.parse(body).status.turn) - 1), turnDetails.total, turnDetails);
-                    
+
                     updateadtChart();
                 }
 
                 formation = newFormation;
-                
+
                 turnDetails = { //reset
                     total: 0,
                     details: []
                 };
                 updateCharacterAutoInfo();
-                
+
                 //status at the end of turn
                 var status = data.status;
                 if (status != undefined && status.formation != undefined) {
                     formation = status.formation; //just in case
                 }
-                
+
                 updateBossInfo();
-                
+
             });
         }
-        
+
         //skill
         else if(path == "ability_result.json") {
             req.getContent(function(body){
@@ -752,7 +760,7 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                 var scenario = data.scenario;
                 var skillName = "";
                 var character;
-                for (var i = 0; i < scenario.length; i++) { 
+                for (var i = 0; i < scenario.length; i++) {
                     if(scenario[i].cmd == "ability") {
                         skillName = scenario[i].name;
                         character = Number(scenario[i].pos);
@@ -760,8 +768,8 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                         for (var j = 0; j < scenario[i].list.length; j++) {
                                 actionDamage += scenario[i].list[j].value;
                          }
-                    
-                    //boss info    
+
+                    //boss info
                     } else if (scenario[i].cmd == "boss_gauge") {
                         if (bossInfo[scenario[i].pos] != undefined) {
                             bossInfo[scenario[i].pos].hp = scenario[i].hp;
@@ -772,10 +780,10 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                                 hp : scenario[i].hp
                             };
                         }
-                        
+
                         updateBossInfo();
-                        
-                    } else if (scenario[i].cmd == "die" && scenario[i].to == "boss") { 
+
+                    } else if (scenario[i].cmd == "die" && scenario[i].to == "boss") {
                         if ( bossInfo[scenario[i].pos] != undefined) {
                             bossInfo[scenario[i].pos].hp = "0";
                         } else {
@@ -783,13 +791,13 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                                 name : undefined
                             };
                         }
-                        
+
                         updateBossInfo();
                     } else if (scenario[i].cmd == "replace" ) {
                         newFormation[scenario[i].pos] = scenario[i].npc;
                     }
                 }
-                
+
                 if(skillName != "") {
                     skillsUsed++;
                     if(actionDamage != 0) {
@@ -801,9 +809,9 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                         appendOthersLog(skillName, "");
                     }
                 }
-                
+
                 formation = newFormation;
-                
+
                 //status at the end of ability
                 var status = data.status;
                 if (status != undefined && status.formation != undefined) {
@@ -811,7 +819,7 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                 }
             });
         }
-        
+
         // summon
         else if(path == "summon_result.json") {
             req.getContent(function(body){
@@ -822,21 +830,21 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                 var data = JSON.parse(body);
                 var scenario = data.scenario;
                 var summonName = "";
-                for (var i = 0; i < scenario.length; i++) { 
-                
+                for (var i = 0; i < scenario.length; i++) {
+
                     if(scenario[i].cmd == "summon_cutin") {
                         summonName = scenario[i].name;
                     } else if(scenario[i].cmd == "summon") {
                         if(scenario[i].name != "" && summonName == "") {
                             summonName = scenario[i].name;
                         }
-                        
+
                         for(var j = 0; j < scenario[i].list[0].damage.length; j++) {
                             actionDamage += scenario[i].list[0].damage[j].value;
                         }
-                     
-                    
-                    //boss info    
+
+
+                    //boss info
                     } else if (scenario[i].cmd == "boss_gauge") {
                         if (bossInfo[scenario[i].pos] != undefined) {
                             bossInfo[scenario[i].pos].hp = scenario[i].hp;
@@ -847,10 +855,10 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                                 hp : scenario[i].hp
                             };
                         }
-                        
+
                         updateBossInfo();
-                        
-                    } else if (scenario[i].cmd == "die" && scenario[i].to == "boss") { 
+
+                    } else if (scenario[i].cmd == "die" && scenario[i].to == "boss") {
                         if ( bossInfo[scenario[i].pos] != undefined) {
                             bossInfo[scenario[i].pos].hp = "0";
                         } else {
@@ -858,7 +866,7 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                                 name : undefined
                             };
                         }
-                        
+
                         updateBossInfo();
                     } else if (scenario[i].cmd == "replace" ) {
                         newFormation[scenario[i].pos] = scenario[i].npc;
@@ -875,7 +883,7 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                     }
                 }
                 formation = newFormation;
-                
+
                 //status at the end of summon
                 var status = data.status;
                 if (status != undefined && status.formation != undefined) {
@@ -883,7 +891,7 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                 }
             });
         }
-        
+
         //raid start information
         else if (path == "start.json") {
             req.getContent(function(body){
@@ -895,7 +903,7 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                     raidID = "";
                 }
                 showRaidId();
-                
+
                 //boss info
                 var boss;
                 bossInfo = [];
@@ -905,35 +913,35 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                       lv : startinfo.boss.param[i].Lv,
                       maxhp : startinfo.boss.param[i].hpmax,
                       hp : startinfo.boss.param[i].hp
-                        
+
                     };
                     bossInfo.push(boss);
                 }
-                
+
                 updateBossInfo();
-                
+
                 //character info
                 for(var i = 0; i < startinfo.player.param.length; i++) {
                     characterInfo[i].name = startinfo.player.param[i].name;
                 }
-                
+
                 updateCharacterInfo();
                 updateCharacterAutoInfo();
-                
+
                 //team formation
                 if (startinfo.formation != undefined) {
                     formation = startinfo.formation;
                 }
-                
+
             });
-        
+
         }
-        
+
         //boss died
         else if (path == "reward.json") {
             req.getContent(function(body){
                 var scenario = JSON.parse(body).scenario;
-                for (var i = 0; i < scenario.length; i++) { 
+                for (var i = 0; i < scenario.length; i++) {
                     if (scenario[i].cmd == "die" && scenario[i].to == "boss") {
                         if ( bossInfo[scenario[i].pos] != undefined) {
                             bossInfo[scenario[i].pos].hp = "0";
@@ -951,26 +959,60 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                             };
                         }
                     }
-                
+
                 }
-                
+
                 updateBossInfo();
             });
-        } 
+        }
     }
 });
 
 function init() {
-    chrome.devtools.inspectedWindow.eval("Game.view.setupView.pJsnData.formation", (res, err) => {
-        if (!err) formation = res.map((i) => {return parseInt(i)});;
-    });
-    chrome.devtools.inspectedWindow.eval("Game.view.setupView.pJsnData.player", (playerInfo, err) => {
-        if (!err) {
-            for (var i = 0; i < playerInfo.number; i++) {
-                characterInfo[i].name = playerInfo.param[i].name;
-            }
-        }
-    });
+  //get Formation
+  chrome.devtools.inspectedWindow.eval("Game.view.setupView.pJsnData.formation", (res, err) => {
+    if (!err) {
+      formation = res.map((i) => {return parseInt(i)});
+    }
+  });
+  // character names and display
+  chrome.devtools.inspectedWindow.eval("Game.view.setupView.pJsnData.player", (playerInfo, err) => {
+    if (!err) {
+      for (var i = 0; i < playerInfo.number; i++) {
+        characterInfo[i].name = playerInfo.param[i].name;
+      }
+      updateCharacterInfo();
+    }
+  });
+  // get boss info and display
+  chrome.devtools.inspectedWindow.eval("Game.view.setupView.pJsnData.boss", (bosses, err) => {
+    if (!err) {
+      var boss;
+      bossInfo = [];
+      for(var i = 0; i < bosses.number; i++) {
+        boss = {
+          name : bosses.param[i].monster,
+          lv : bosses.param[i].Lv,
+          maxhp : bosses.param[i].hpmax,
+          hp : bosses.param[i].hp
+        };
+        bossInfo.push(boss);
+      }
+      updateBossInfo();
+    }
+  });
+  // get raid id and display
+  chrome.devtools.inspectedWindow.eval("Game.view.setupView.pJsnData", (info, err) => {
+    if (!err) {
+      if(info.multi == 1) {
+          raidID = info.twitter.battle_id;
+      } else {
+          raidID = "";
+      }
+      questID = info.raid_id;
+      showRaidId();
+    }
+  });
 }
 
 init();
@@ -1009,7 +1051,7 @@ var adtdata = {
             data: [],
             spanGaps: false,
         },
-        
+
         {
             label: "Damage in Turn",
             fill: false,
@@ -1047,4 +1089,3 @@ var adtoptions = {
 var graphctx = document.getElementById("graph").getContext("2d");
 
 var adtChart = new Chart.Line(graphctx, {data: adtdata, options: adtoptions});
-

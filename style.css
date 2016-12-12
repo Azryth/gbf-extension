@@ -17,10 +17,10 @@ li {
     font-size: 1.5em;
 }
 
-a, a:link, a:visited 
+a, a:link, a:visited
 {
-    text-decoration: none; 
-    decoration: none; 
+    text-decoration: none;
+    decoration: none;
     color: white;
 }
 
@@ -37,22 +37,22 @@ a, a:link, a:visited
     margin: 1em;
 }
 
-.flex-container .halfsub {
+.flex-container .sub1 {
     padding-left: 1em;
     border-style: none;
 }
 
-.flex-container .sub {
+.flex-container .sub2 {
     padding-left: 2em;
     border-style: none;
 }
 
-.flex-container .subsub {
+.flex-container .sub3 {
     padding-left: 3em;
     border-style: none;
 }
 
-.flex-container .subsubsub {
+.flex-container .sub4 {
     padding-left: 4em;
 }
 
@@ -75,7 +75,7 @@ a, a:link, a:visited
     display: inline-block;
     background-color: #007fff;
     color: white;
-    
+
     border: 0.1em;
     border-color: #003eff;
     border-radius: 0.3em;
@@ -117,7 +117,7 @@ a, a:link, a:visited
 
 .character {
     border: 0.2px;
-    border-bottom-style: solid;  
+    border-bottom-style: solid;
     margin-top: 1em;
 }
 /*-------------graphs-------------*/

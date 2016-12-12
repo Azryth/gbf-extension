@@ -12,17 +12,17 @@
             <li><a href="#damageLogger">Damage</a></li>
             <li><a href="#AutoLogger">Autoattack info</a></li>
         </ul>
-    
+
         <!-- Tab 1-->
-        <div id="damageLogger">        	
+        <div id="damageLogger">
         <a class="clickable" id="saveLog" download="GBFlog.html" style="color:white; position:absolute;">save battlelog</a>
-        <h1>Damage Logger</h1>                    
-        
+        <h1>Damage Logger</h1>
+
             <div class="flex-container">
-                
+
                 <!--left column-->
                 <div class="flex-item">
-                
+
                     <!--log-->
                     <div id="battleLog">
                   	  <h1>Battlelog</h1>
@@ -30,13 +30,13 @@
                       	<ul id="log"></ul>
                       </div>
                     </div>
-                    
+
                     <h1>Characters</h1>
                     <div id="characterInfo">
                     </div>
-                    
+
                 </div>
-                
+
                 <!--right column-->
                 <div class="flex-item">
                     <div class="flex-container" id="buttonContainer">
@@ -45,36 +45,36 @@
                         <p class="clickable" id="resetDamage">reset statistics</p>
                     </div>
                     <ul>
-                        
+
                         <li class="statSection flex-container" id="raidID"></li>
-                        
+
                         <h1>Enemies</h1>
                         <div class="statSection" id="enemyInfo">
                         </div>
-                    
-                        
+
+
                         <h1>Statistics</h1>
                         <div class="statSection">
                             <li class="flex-container"><p>total damage</p><p id="totalDamage">0</p></li>
-                            
-                            <li class="flex-container"><p class="sub">total attack damage</p><p id="totalAttackDamage">0</p></li>
-                            
-                            <li class="flex-container"><p class="sub">total skill damage</p><p id="totalSkillDamage">0</p></li>
-                            
-                            <li class="flex-container"><p class="sub">total chain burst damage</p><p id="totalChainBurst">0</p></li>
-                            
-                            <li class="flex-container"><p class="sub">total summon damage</p><p id="totalSummonDamage">0</p></li>
-                            
+
+                            <li class="flex-container"><p class="sub2">total attack damage</p><p id="totalAttackDamage">0</p></li>
+
+                            <li class="flex-container"><p class="sub2">total skill damage</p><p id="totalSkillDamage">0</p></li>
+
+                            <li class="flex-container"><p class="sub2">total chain burst damage</p><p id="totalChainBurst">0</p></li>
+
+                            <li class="flex-container"><p class="sub2">total summon damage</p><p id="totalSummonDamage">0</p></li>
+
                             <br/>
-                            
-                            <li class="flex-container"><p class="sub">avg damage per turn</p><p id="damageTurn">0</p></li>
-                            
+
+                            <li class="flex-container"><p class="sub2">avg damage per turn</p><p id="damageTurn">0</p></li>
+
                             <br/>
-                            
+
                             <li class="flex-container"><p>skills per turn</p><p id="skillsTurn">0</p></li>
                             <li class="flex-container"><p>summons per turn</p><p id="summonsTurn">0</p></li>
                         </div>
-                        
+
                         <!--timer-->
                         <h1>DPS</h1>
                         <div class="statSection">
@@ -88,11 +88,11 @@
                             <li class="flex-container"><p>timed total damage</p><p id="timedtotalDamage">0</p></li>
                             <li class="flex-container"><p>damage per second</p><p id="damageTime">0</p></li>
                         </div>
-                        
+
                     </ul>
                 </div>
             </div>
-        	
+
         	<div id="chartSection">
             	<h1>Damage/Turn and Avg Damage/Turn in 1000s</h1>
             	<div class="chartWrapper">
@@ -102,18 +102,18 @@
                 	<canvas id="graphAxis"></canvas>
             	</div>
             </div>
-        
+
         </div>
-        
+
         <!-- Tab 2 -->
         <div id="AutoLogger">
             <h1>Autoattack information</h1>
             <div id="characterAutoInfo">
             </div>
         </div>
-        
+
     </div>
-    
+
     <script src="jquery-3.1.0.min.js"></script>
     <script src="jquery-ui.min.js"></script>
     <script src="Chart.bundle.min.js"></script>
