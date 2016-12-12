@@ -133,11 +133,11 @@ function updateCharacterInfo() {
         }
 
         //attack damage
-        breakdown.append(formatLiData("attack damage", characterInfo[i].attackDamage, 1, ["flex-container"]));
+        breakdown.append(formatLiData("attack damage", displayNumbers(characterInfo[i].attackDamage), 1, ["flex-container"]));
         //ougi damage
-        breakdown.append(formatLiData("ougi damage", characterInfo[i].ougiDamage, 1, ["flex-container"]));
+        breakdown.append(formatLiData("ougi damage", displayNumbers(characterInfo[i].ougiDamage), 1, ["flex-container"]));
         //skill damage
-        breakdown.append(formatLiData("skill damage", characterInfo[i].skillDamage, 1, ["flex-container"]));
+        breakdown.append(formatLiData("skill damage", displayNumbers(characterInfo[i].skillDamage), 1, ["flex-container"]));
 
         breakdown.append($("</br>"));
         $("#characterInfo").append(breakdown);
