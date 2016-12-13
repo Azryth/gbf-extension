@@ -182,115 +182,104 @@ Adds a line to the log containing damage done and action taken
 function appendTurnLog(action, damage, turnDetails) {
 
     //summary
-    var item = $("<li>");
-    item.addClass("flex-container");
-    item.addClass("turn");
-    item.addClass("toggleable");
-    item.html("<p>\> " + action + "</p><p>" + displayNumbers(damage) + "</p></li>");
-
-    $("#log").prepend(item);
+    var totalTurnDmg = displayNumbers(damage);
+    var turn = formatLiData("\> " + action, totalTurnDmg, 0, ["flex-container", "turn", "toggleable"]);
+    $("#log").prepend(turn);
 
     var container = $("<div>");
     container.hide();
-    var subItem;
-    var subAction;
 
-    for(var i = 0; i < turnDetails.details.length; i++) { //character
-        //container
-        subItem = $("<li>");
-        subItem.addClass("flex-container");
+    var charDl = turnDetails.details;
+    for(var i = 0; i < charDl.length; i++) { //character
+        var charActionClasses = ["flex-container"];
+        var key = "";
+        var value = displayNumbers(charDl[i].total);
+
+        var actions = charDl[i].details;
+        var actionsExpandable = actions && actions.length > 0 && (actions.length > 1 || (actions[0].details && actions[0].details.length > 1));
 
         //action name
-        subAction = $("<p>");
-        subAction.addClass("sub2");
-        if (turnDetails.details[i].pos != -1) {
-            if(!(turnDetails.details[i].type == "Chain Burst" || (turnDetails.details[i].type == "Single" && turnDetails.details[i].details[0].details.length < 2) || (turnDetails.details[i].type == "Counter" && turnDetails.details[i].details.length < 2) || turnDetails.details[i].type == "CA")){
-                subAction.html("\> "+ characterInfo[formation[turnDetails.details[i].pos]].name + "(" + turnDetails.details[i].type + ")");
-                subItem.addClass("toggleable");
-            } else {
-                subAction.text(characterInfo[formation[turnDetails.details[i].pos]].name + "(" + turnDetails.details[i].type + ")");
-            }
-        } else {
-            if( turnDetails.details[i].type == "Chain Burst") {
-                subAction.text(turnDetails.details[i].type);
-            }
+        if (charDl[i].pos != -1) {
+          // character name + action type
+          key = characterInfo[formation[charDl[i].pos]].name + "(" + charDl[i].type + ")";
+
+          //if action is expandable
+          if(actionsExpandable) {
+            key = "\> " + key;
+            charActionClasses.push("toggleable");
+          }
+        } else { //everything not attributable to a single character
+          if( charDl[i].type == "Chain Burst") {
+            key = charDl[i].type;
+          }
         }
-        subItem.append(subAction);
+        var characterTurn = formatLiData(key, value, 2, charActionClasses);
+        container.append(characterTurn);
 
-        subAction = $("<p>");
-        subAction.text(displayNumbers(turnDetails.details[i].total));
-        subItem.append(subAction);
-
-        container.append(subItem);
         //action details if needed, i.e. not single attack, not charge attack, not chain burst
-        if(!(turnDetails.details[i].type == "Chain Burst" || (turnDetails.details[i].type == "Single" && turnDetails.details[i].details[0].details.length < 2) || turnDetails.details[i].type == "CA" || (turnDetails.details[i].type == "Counter" && turnDetails.details[i].details.length < 2))){
+        if(actionsExpandable){
             var subContainer = $("<div>");
             subContainer.hide();
-            var subsubItem;
-            var subsubAction;
 
-            for(var j = 0; j < turnDetails.details[i].details.length; j++) { //each attack
-                subsubItem = $("<li>");
-                subsubItem.addClass("flex-container");
-                subsubAction = $("<p>");
-                subsubAction.addClass("sub3");
+            for(var j = 0; j < actions.length; j++) { //each attack
 
-                if ( turnDetails.details[i].details[j].details.length > 1) {
-                    subsubAction.html("\> Attack " + (j+1));
-                    subsubItem.addClass("toggleable");
-                } else {
-                    subsubAction.text("Attack " + (j+1));
+                var actionClasses = ["flex-container"];
+                var actionKey = "Attack " + (j+1);
+                var actionValue = displayNumbers(actions[j].total);
+
+                if ( actions[j].details.length > 1) {
+                    actionKey = "\> " + actionKey;
+                    actionClasses.push("toggleable");
                 }
-                subsubItem.append(subsubAction);
-                subsubAction = $("<p>");
-                subsubAction.text(displayNumbers(turnDetails.details[i].details[j].total));
-                subsubItem.append(subsubAction);
-                subContainer.append(subsubItem);
+
+                var action = formatLiData(actionKey, actionValue, 3, actionClasses);
+                subContainer.append(action);
 
                 var subsubContainer = $("<div>");
                 subsubContainer.hide();
-                var subsubsubItem;
-                var subsubsubAction;
 
-                if ( turnDetails.details[i].details[j].details.length > 1) {
-                    for (var k = 0; k < turnDetails.details[i].details[j].details.length;k++){
-                        subsubsubItem = $("<li>");
-                        subsubsubItem.addClass("flex-container");
-                        subsubsubAction = $("<p>");
-                        subsubsubAction.addClass("sub4");
+                if ( actions[j].details.length > 1) {
+                    for (var k = 0; k < actions[j].details.length;k++){
+
+                        var subActionKey = "";
+                        var subActionValue = actions[j].details[k];
+
                         if( k == 0) {
-                            subsubsubAction.text("Normal");
+                            subActionKey = "Normal";
                         } else {
-                            subsubsubAction.text("Extra");
+                            subActionKey = "Extra";
                         }
-                        subsubsubItem.append(subsubsubAction);
-                        subsubsubAction = $("<p>");
-                        subsubsubAction.text(displayNumbers(turnDetails.details[i].details[j].details[k]));
-                        subsubsubItem.append(subsubsubAction);
-                        subsubContainer.append(subsubsubItem);
+
+                        var subAction = formatLiData(subActionKey, subActionValue, 4, ["flex-container"]);
+                        subsubContainer.append(subAction);
                     }
-                    subsubContainer.append($("<br/>"));
+                    if(j < actions.length - 1) {
+                      subsubContainer.append($("<br/>"));
+                    }
                     subContainer.append(subsubContainer);
-                    subsubItem.click(function() {
+                    action.click(function() {
                         $(this).next().toggle();
                     });
                 }
             }
-            subContainer.append($("<br/>"));
+            //only add another space if it's not the last entry
+            if (i < charDl.length - 1) {
+              subContainer.append($("<br/>"));
+            }
 
             container.append(subContainer);
-            subItem.click(function() {
+            characterTurn.click(function() {
                 $(this).next().toggle();
             });
         }
     }
     container.append($("<br/>"));
 
-    item.click(function() {
+    turn.click(function() {
         $(this).next().toggle();
     });
 
-    item.after(container);
+    turn.after(container);
 
     totalDamage += turnDetails.total;
     if(timer != undefined) {
