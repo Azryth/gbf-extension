@@ -46,6 +46,8 @@ For bugs, it'd be cool if you could open an issue on this github so it's easier 
 ### TODO list ###
 
 * Lots of testing
-* Extra damage from summons are not logged yet
-* Show if debuffs hit/miss (will get complicated)
 * Refactoring
+* Display extra CA damage
+* Settings
+* Show if debuffs hit/miss (will get complicated)
+* Extra damage from summons are not logged yet
