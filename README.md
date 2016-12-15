@@ -47,7 +47,8 @@ For bugs, it'd be cool if you could open an issue on this github so it's easier 
 
 * Lots of testing
 * Refactoring
-* Display extra CA damage
+* Chara current hp
+* Boss log
 * Settings
 * Show if debuffs hit/miss (will get complicated)
 * Extra damage from summons are not logged yet
