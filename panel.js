@@ -224,7 +224,7 @@ function appendTurnLog(action, damage, turnDetails) {
             for(var j = 0; j < actions.length; j++) { //each attack
 
                 var actionClasses = ["flex-container"];
-                var actionKey = "Attack " + (j+1);
+                var actionKey = (charDl[i].type == "CA") ? (j == 0 ? "Normal" : "Extra") : "Attack " + (j+1);
                 var actionValue = displayNumbers(actions[j].total);
 
                 if ( actions[j].details.length > 1) {
@@ -290,7 +290,8 @@ function appendTurnLog(action, damage, turnDetails) {
 }
 
 function appendOthersLog(action, damage) {
-    $("#log").prepend("<li class=\"flex-container\"><p class=\"sub1\">" + action + "</p><p>" + displayNumbers(damage) + "</p></li>");
+    // $("#log").prepend("<li class=\"flex-container\"><p class=\"sub1\">" + action + "</p><p>" + displayNumbers(damage) + "</p></li>");
+    $("#log").prepend(formatLiData(action, displayNumbers(damage), 1, ["flex-container"]));
 
     totalDamage += actionDamage;
     if(timer != undefined) {
@@ -619,19 +620,36 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                             chainBurst = true;
                         }
                         if(scenario[i].list !== undefined) {
-                            for (var j = 0; j < scenario[i].list.length; j++) {
-                                charaDetails.total += scenario[i].list[j].damage[0].value;
+                          for (var j = 0; j < scenario[i].list.length; j++) {
+                                //charaDetails.total += scenario[i].list[j].damage[0].value;
+                                attackDetails.total += scenario[i].list[j].damage[0].value;
                           }
+                          attackDetails.details.push(attackDetails.total);
+                          charaDetails.total += attackDetails.total;
+                          charaDetails.details.push(attackDetails);
+                          attackDetails = { // reset
+                              total: 0,
+                              details: [],
+                          };
                         }
 
                         // checking for additional damage on ougi (Yoda, Juliet, etc.)
                         // TODO: this should probably make the ougi expandable
-                        if (scenario[i+1].cmd == "damage" && scenario[i+1].mode == "parallel") {
-                            for (var j = 0; j < scenario[i+1].list.length; j++) {
-                                charaDetails.total += scenario[i+1].list[j].value;
-                            }
+                        for (var k = 1; scenario[i+k].cmd == "damage"; k++) {
+                          if (scenario[i+k].cmd == "damage" && scenario[i+1].mode == "parallel") {
+                              for (var j = 0; j < scenario[i+1].list.length; j++) {
+                                  //charaDetails.total += scenario[i+1].list[j].value;
+                                  attackDetails.total += scenario[i+k].list[j].value;
+                                  attackDetails.details.push(scenario[i+k].list[j].value);
+                              }
+                          }
+                          charaDetails.total += attackDetails.total;
+                          charaDetails.details.push(attackDetails);
+                          attackDetails = { // reset
+                              total: 0,
+                              details: [],
+                          };
                         }
-
                         charaDetails.type = "CA";
                         charaDetails.pos = Number(scenario[i].pos);
                         //charaDetails.details is empty for charge attack FIXME: add details for additional damage
