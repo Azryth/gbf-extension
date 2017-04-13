@@ -545,9 +545,9 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
     if(reqURL.hostname == "gbf.game.mbga.jp" || reqURL.hostname == "game.granbluefantasy.jp") {
 
         //i.e. normal_attack_result.json
-        var path = reqURL.pathname.split('/')[2];
+        var path = reqURL.pathname;
         //attack
-        if(path == "normal_attack_result.json") {
+        if(path.indexOf("normal_attack_result.json") !== -1) {
             req.getContent(function(body){
                 if (formation.length == 0) {
                     formation = [0, 1, 2, 3];
@@ -757,7 +757,7 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
         }
 
         //skill
-        else if(path == "ability_result.json") {
+        else if(path.indexOf("ability_result.json") !== -1) {
             req.getContent(function(body){
                 if (formation.length == 0) {
                     formation = [0, 1, 2, 3];
@@ -828,7 +828,7 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
         }
 
         // summon
-        else if(path == "summon_result.json") {
+        else if(path.indexOf("summon_result.json") !== -1) {
             req.getContent(function(body){
                 if (formation.length == 0) {
                     formation = [0, 1, 2, 3];
@@ -900,7 +900,7 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
         }
 
         //raid start information
-        else if (path == "start.json") {
+        else if (path.indexOf("start.json") !== -1) {
             req.getContent(function(body){
                 var startinfo = JSON.parse(body);
                 //raid id
@@ -945,7 +945,7 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
         }
 
         //boss died
-        else if (path == "reward.json") {
+        else if (path.indexOf("reward.json") !== -1) {
             req.getContent(function(body){
                 var scenario = JSON.parse(body).scenario;
                 for (var i = 0; i < scenario.length; i++) {
