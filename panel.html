@@ -15,69 +15,71 @@
 
         <!-- Tab 1-->
         <div id="damageLogger">
-        <a class="clickable" id="saveLog" download="GBFlog.html" style="color:white; position:absolute;">save battlelog</a>
+        <a class="clickable" id="saveLog" download="GBFlog.html" style="color:white; position:absolute;">save</a>
         <h1>Damage Logger</h1>
 
-            <div class="flex-container">
+            <div class="main-flex">
 
-                <!--left column-->
+                <!--left column START-->
                 <div class="flex-item">
-
-                    <!--log-->
-                    <div id="battleLog">
-                  	  <h1>Battlelog</h1>
-                   	  <div id="log-container">
-                      	<ul id="log"></ul>
-                      </div>
-                    </div>
-
-                    <h1>Characters</h1>
-                    <div id="characterInfo">
-                    </div>
-
-                </div>
-
-                <!--right column-->
-                <div class="flex-item">
-                    <div class="flex-container" id="buttonContainer">
-                        <p class="clickable" id="clearLog">clear battlelog</p>
-                        <p class="clickable" id="clearEnemyInfo">clear enemy info</p>
-                        <p class="clickable" id="resetDamage">reset statistics</p>
-                    </div>
                     <ul>
 
-                        <li class="statSection flex-container" id="raidID"></li>
-
-                        <h1>Enemies</h1>
+                      <!--enemies START-->
+                      <li>
+                        <div class="flex-container">
+                          <h1>Enemies</h1>
+                          <p class="clickable" id="clearEnemyInfo">clear enemy info</p>
+                        </div>
                         <div class="statSection" id="enemyInfo">
                         </div>
+                      </li>
+                      <!--enemies END-->
 
-
-                        <h1>Statistics</h1>
-                        <div class="statSection">
-                            <li class="flex-container"><p>total damage</p><p id="totalDamage">0</p></li>
-
-                            <li class="flex-container"><p class="sub2">total attack damage</p><p id="totalAttackDamage">0</p></li>
-
-                            <li class="flex-container"><p class="sub2">total skill damage</p><p id="totalSkillDamage">0</p></li>
-
-                            <li class="flex-container"><p class="sub2">total chain burst damage</p><p id="totalChainBurst">0</p></li>
-
-                            <li class="flex-container"><p class="sub2">total summon damage</p><p id="totalSummonDamage">0</p></li>
-
-                            <br/>
-
-                            <li class="flex-container"><p class="sub2">avg damage per turn</p><p id="damageTurn">0</p></li>
-
-                            <br/>
-
-                            <li class="flex-container"><p>skills per turn</p><p id="skillsTurn">0</p></li>
-                            <li class="flex-container"><p>summons per turn</p><p id="summonsTurn">0</p></li>
+                      <!--log START-->
+                      <li id="battleLog">
+                        <div class="flex-container">
+                  	       <h1>Battlelog</h1>
+                           <p class="clickable" id="clearLog">clear battlelog</p>
                         </div>
+                 	      <div id="log-container">
+                      	    <ul id="log"></ul>
+                        </div>
+                      </li>
+                    <!--log END-->
 
-                        <!--timer-->
+                  </ul>
+                </div>
+                <!--left column END-->
+
+                <!--middle column START-->
+                <div class="flex-item">
+                    <ul>
+                      <!--raid id START-->
+                      <li class="statSection flex-container" id="raidID"></li>
+                      <!--raid id END-->
+
+                      <!--general statistics START-->
+                      <li>
+                        <div class="flex-container">
+                          <h1>Statistics</h1>
+                          <p class="clickable" id="resetDamage">reset statistics</p>
+                        </div>
+                        <li class="flex-container"><p>total damage</p><p id="totalDamage">0</p></li>
+                        <li class="flex-container"><p class="sub2">total attack damage</p><p id="totalAttackDamage">0</p></li>
+                        <li class="flex-container"><p class="sub2">total skill damage</p><p id="totalSkillDamage">0</p></li>
+                        <li class="flex-container"><p class="sub2">total chain burst damage</p><p id="totalChainBurst">0</p></li>
+                        <li class="flex-container"><p class="sub2">total summon damage</p><p id="totalSummonDamage">0</p></li>
+                        <br/>
+                        <li class="flex-container"><p class="sub2">avg damage per turn</p><p id="damageTurn">0</p></li>
+                        <br/>
+                        <li class="flex-container"><p>skills per turn</p><p id="skillsTurn">0</p></li>
+                        <li class="flex-container"><p>summons per turn</p><p id="summonsTurn">0</p></li>
+                      </li>
+                      <!--general statistics END-->
+
+                      <!--timer START-->
+                      <li>
                         <h1>DPS</h1>
-                        <div class="statSection">
                             <div class="clock">
                                 <div class="flex-container">
                                     <p class="clickable" id="toggleTimer">start timer</p>
@@ -87,10 +89,30 @@
                             </div>
                             <li class="flex-container"><p>timed total damage</p><p id="timedtotalDamage">0</p></li>
                             <li class="flex-container"><p>damage per second</p><p id="damageTime">0</p></li>
-                        </div>
+                      </li>
+                      <!--timer END-->
 
                     </ul>
                 </div>
+                <!--middle column END-->
+
+                <!--right column START-->
+                <div class="flex-item">
+                  <ul>
+
+                    <!--characters START-->
+                    <li>
+                      <h1>Characters</h1>
+                      <div id="characterInfo">
+                      </div>
+                    </li>
+                    <!--characted END-->
+
+
+                  </ul>
+                </div>
+                <!--right column END-->
+
             </div>
 
         	<div id="chartSection">

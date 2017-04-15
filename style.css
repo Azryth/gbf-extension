@@ -2,19 +2,23 @@
 body
 {
 	font-family: 'Lato', Verdana, Geneva, sans-serif;
-	letter-spacing:0.1vw;
 	font-size: 1.25vw;
-	line-height: 200%;
+	line-height: 160%;
 }
 
 h1 {
     font-size: 2em;
-    margin: 0.25em 0em 1em 0em;
+    margin: 0.25em 0em 0.5em 0em;
     text-align: center;
 }
 
+h2 {
+	font-size: 1.5em;
+	text-align: center;
+}
+
 li {
-    font-size: 1.5em;
+    //font-size: 1.5em;
 }
 
 a, a:link, a:visited
@@ -24,17 +28,27 @@ a, a:link, a:visited
     color: white;
 }
 
+.main-flex {
+  display: flex;
+	justify-content: space-between;
+}
+
+.section {
+	display: block;
+}
+
 .flex-container {
     display: flex;
     width: 100%;
     flex-direction: row;
     flex-wrap: nowrap;
     justify-content: space-between;
+		margin: 0;
 }
 
 .flex-item {
-    width: 48%;
-    margin: 1em;
+		display: block;
+    width: 31%;
 }
 
 .flex-container .sub1 {
@@ -81,6 +95,7 @@ a, a:link, a:visited
     border-radius: 0.3em;
     border-style: solid;
     padding: 0.5em;
+		margin-bottom: 1.5em;
 }
 
 .clickable:hover {
@@ -88,9 +103,10 @@ a, a:link, a:visited
 }
 
 #log-container {
-    height: 40vh;
+    height: 35vh;
     background-color: #e6e6e6;
     padding: 0em 0.4em 0em 0.4em;
+		margin-bottom: 1em;
     overflow-y:scroll;
 }
 
@@ -107,11 +123,6 @@ a, a:link, a:visited
 .statSection {
     border: 0.2px;
     padding-bottom: 1em;
-    border-bottom-style: solid;
-}
-
-#buttonContainer {
-    margin-bottom: 2em;
 }
 
 
@@ -120,6 +131,15 @@ a, a:link, a:visited
     border-bottom-style: solid;
     margin-top: 1em;
 }
+
+#characterInfo > div {
+	line-height: 120%;
+}
+
+#raidID {
+	color: #800000;
+}
+
 /*-------------graphs-------------*/
 
 #graph {

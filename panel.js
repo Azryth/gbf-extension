@@ -173,7 +173,7 @@ function updateCharacterAutoInfo() {
 }
 
 function showRaidId() {
-    $("#raidID").html("<p>Raid ID</p><p>" + raidID + "</p>");
+    $("#raidID").html("<h2>Raid ID</h2><h2>" + raidID + "</h2>");
 }
 
 /*
