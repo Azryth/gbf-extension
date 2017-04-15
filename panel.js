@@ -189,13 +189,6 @@ function updateCharacterInfo() {
     }
 }
 
-function updateCharacterAutoInfo() {
-    $("#characterAutoInfo").html("");
-    for (var i = 0; i < characterInfo.length; i++) {
-        //$("#characterAutoInfo").append("<div class=\"character\"><li class=\"flex-container\"><p>" + characterInfo[i].name +"</p></li><li class=\"flex-container\"><p class=\"sub2\">Turns in combat</p><p>" + displayNumbers(characterInfo[i].turns) + "</p></li><li class=\"flex-container\"><p class=\"sub2\">Average autoattack damage</p><p>" + displayNumbers(avgDmg) + "</p></li><li class=\"flex-container\"><p class=\"sub2\">DA rate</p><p>" + daRate + "</p></li><li class=\"flex-container\"><p class=\"sub2\">TA rate</p><p>" + taRate + "</p></li><div>");
-    }
-}
-
 function showRaidId() {
     $("#raidID").html("<h2>Raid ID</h2><h2>" + raidID + "</h2>");
 }
@@ -470,10 +463,19 @@ function saveLog() {
 	link.href = "data:text/plain;charsset=utf-8," + encodeURIComponent(logFile.prop("outerHTML"));
 }
 
+function setRaidReset() {
+  if (document.getElementById('setResetRaid').checked) {
+    resetRaidOnChange = true;
+  } else {
+    resetRaidOnChange = false;
+  }
+}
+
 document.querySelector("#resetDamage").addEventListener('click', resetDamage, false);
 document.querySelector("#clearLog").addEventListener('click', clearLog, false);
 document.querySelector("#clearEnemyInfo").addEventListener('click', clearEnemyInfo, false);
 document.querySelector("#saveLog").addEventListener('click', saveLog, false);
+document.querySelector("#setResetRaid").addEventListener('click', setRaidReset, false);
 
 //----------------------------------------------------------------------------
 /////////////////
@@ -491,7 +493,6 @@ var totalSkillDamage = 0; //all skill damage
 var totalChainBurstDamage = 0; //damage from all chain bursts
 var turnNumber = 0;
 var raidID = ""; //twitter raidID
-var questID = ""; //Id that identifies the quest instance
 var bossInfo = []; //boss info with name, lv, maxhp, hp
 var characterInfo = [ //character info with name, damage dealt
     { //first character (i.e. Gran/Djeeta)
@@ -576,6 +577,10 @@ var characterInfo = [ //character info with name, damage dealt
 var formation = []; // length 4 array. Each position holds the character that is in the position of the index
 var skillsUsed = 0;
 var summonsUsed = 0;
+
+//For resetting raid
+var resetRaidOnChange = false; //when true, all stats will reset if raid id changes
+var questID = ""; //Id that identifies the quest instance
 
 chrome.devtools.network.onRequestFinished.addListener(function(req) {
     var reqURL = document.createElement('a');
@@ -785,7 +790,6 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                     total: 0,
                     details: []
                 };
-                updateCharacterAutoInfo();
 
                 //status at the end of turn
                 var status = data.status;
@@ -945,6 +949,16 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
         else if (path.indexOf("start.json") !== -1) {
             req.getContent(function(body){
                 var startinfo = JSON.parse(body);
+
+                if(resetRaidOnChange) {
+                  if(questID !== startinfo.raid_id){
+                      questID = startinfo.raid_id;
+                      resetDamage();
+                      clearLog();
+                      clearEnemyInfo();
+                  }
+                }
+
                 //raid id
                 if(startinfo.multi == 1) {
                     raidID = startinfo.twitter.battle_id;
@@ -975,7 +989,6 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                 }
 
                 updateCharacterInfo();
-                updateCharacterAutoInfo();
 
                 //team formation
                 if (startinfo.formation != undefined) {
