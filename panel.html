@@ -37,6 +37,8 @@
                       </li>
                       <!--enemies END-->
 
+                      <br/>
+
                       <!--log START-->
                       <li id="battleLog">
                         <div>
@@ -62,6 +64,8 @@
                       <li class="statSection flex-container" id="raidID"></li>
                       <!--raid id END-->
 
+                      <br/>
+
                       <!--general statistics START-->
                       <li>
                         <div>
@@ -85,6 +89,8 @@
                       </li>
                       <!--general statistics END-->
 
+                      <br/>
+
                       <!--timer START-->
                       <li>
                           <h1>DPS</h1>
@@ -99,8 +105,6 @@
                           <li class="flex-container"><p>damage per second</p><p id="damageTime">0</p></li>
                       </li>
                       <!--timer END-->
-
-
                     </ul>
                 </div>
                 <!--middle column END-->
@@ -117,6 +121,18 @@
                     </li>
                     <!--characted END-->
 
+                    <br/>
+
+                    <!-- Raid members START-->
+                    <li id="raidHonors">
+                      <div class="flex-container">
+                        <h1>Raid Ranking</h1>
+                        <p class="clickable" id="resetRaidMembers">reset</p>
+                      </div>
+                      <ul id="raidHonorsList">
+                      </ul>
+                    </li>
+                    <!-- Raid members END-->
 
                   </ul>
                 </div>
@@ -143,7 +159,7 @@
             <table>
               <tr>
                 <td class="flex-container">
-                  <p>Version 1.01</p>
+                  <p>Version 1.02</p>
                 </td>
                 <td>
                 </td>
@@ -177,6 +193,18 @@
                 <td>
                   <p>Not sure how well this works or if it helps at all. Not enough testing.</p>
                 </td>
+              </tr>
+              <tr>
+                <td>
+                  <p>Show raid honors</p>
+                </td>
+                <td>
+                  <label class="switch">
+                    <input type="checkbox" id="setRaidHonors">
+                    <div class="slider round"></div>
+                  </label>
+                </td>
+                <td></td>
               </tr>
             </table>
         </div>

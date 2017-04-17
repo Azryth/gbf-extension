@@ -414,6 +414,44 @@ function bossInfoTimedUpdate() {
 
 document.querySelector("#setUpdateBoss").addEventListener('click', bossInfoTimedUpdate, false);
 
+//-   -   -   -   -   -   -   -   -   -   -   -   -  -   -   -   -   -   -   -   -   -   -   -   -   -
+var raidHonorUpdate;
+
+function raidHonorsTimedUpdate() {
+  if(document.getElementById('setRaidHonors').checked) {
+    $("#raidHonors").show();
+    if(raidHonorUpdate === undefined) {
+      raidHonorUpdate = setInterval(function() {
+        //get info and update
+        chrome.devtools.inspectedWindow.eval("Game.view.setupView.pJsnData", (info, err) => {
+          if (!err) {
+            if(info.multi == 1) {
+              console.log(data);
+              var data = info.multi_raid_member_info;
+              updateRaidMemberInfo(data);
+            }
+          } else {
+            console.log("error");
+          }
+        });
+      }, 500);
+    }
+  } else {
+    $("#raidHonors").hide();
+    clearInterval(raidHonorUpdate);
+    raidHonorUpdate = undefined;
+  }
+}
+
+function updateRaidMemberInfo(rmi) {
+  $("#raidHonorsList").html("");
+  for(var i = 0; i < rmi.length; i++) {
+    $("#raidHonorsList").append(formatLiData(rmi[i].nickname + " (" + rmi[i].level + ")", displayNumbers(rmi[i].point), 0, ["flex-container"]));
+  }
+}
+
+document.querySelector("#setRaidHonors").addEventListener('click', raidHonorsTimedUpdate, false);
+
 //------------------------------------------------------------------------------
 
 /////////////
@@ -465,10 +503,13 @@ function clearEnemyInfo() {
     raidID = "";
 }
 
+function resetRaidMemberInfo() {
+  $("#raidHonorsList").html("");
+}
+
 $(function() {
     $("#tabs").tabs();
 });
-
 
 function saveLog() {
 	var link = document.getElementById("saveLog");
@@ -505,6 +546,7 @@ document.querySelector("#clearLog").addEventListener('click', clearLog, false);
 document.querySelector("#clearEnemyInfo").addEventListener('click', clearEnemyInfo, false);
 document.querySelector("#saveLog").addEventListener('click', saveLog, false);
 document.querySelector("#setResetRaid").addEventListener('click', setRaidReset, false);
+document.querySelector("#resetRaidMembers").addEventListener('click', resetRaidMemberInfo, false);
 
 //----------------------------------------------------------------------------
 /////////////////
@@ -985,6 +1027,7 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                       resetDamage();
                       clearLog();
                       clearEnemyInfo();
+                      resetRaidMemberInfo()
                   }
                 }
 
@@ -1104,6 +1147,10 @@ function init() {
       showRaidId();
     }
   });
+
+  // get raid member honors
+  document.getElementById('setRaidHonors').checked = true;
+  raidHonorsTimedUpdate();
 
 }
 
