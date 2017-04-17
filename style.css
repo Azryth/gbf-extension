@@ -196,6 +196,16 @@ input:checked + .slider:before {
 	color: #800000;
 }
 
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td, th {
+		vertical-align: middle;
+    text-align: left;
+}
 /*-------------graphs-------------*/
 
 #graph {

@@ -385,6 +385,35 @@ document.querySelector("#toggleTimer").addEventListener('click', startTimer, fal
 document.querySelector("#clearTimer").addEventListener('click', clearTimer, false);
 
 
+//------- timed value update ---------
+
+var bossUpdate;
+
+function bossInfoTimedUpdate() {
+  if(document.getElementById('setUpdateBoss').checked) {
+    if(bossUpdate === undefined) {
+        bossUpdate = setInterval(function() {
+          // get boss info and display
+          chrome.devtools.inspectedWindow.eval("Game.view.setupView.pJsnData.boss", (bosses, err) => {
+            if (!err) {
+              for(var i = 0; i < bossInfo.length; i++) {
+                if(bosses.param[i].hp < bossInfo[i].hp) {
+                  bossInfo[i].hp = bosses.param[i].hp;
+                }
+              }
+              updateBossInfo();
+            }
+          });
+        }, 300);
+    }
+  } else {
+    clearInterval(bossUpdate);
+    bossUpdate = undefined;
+  }
+}
+
+document.querySelector("#setUpdateBoss").addEventListener('click', bossInfoTimedUpdate, false);
+
 //------------------------------------------------------------------------------
 
 /////////////
@@ -1075,6 +1104,7 @@ function init() {
       showRaidId();
     }
   });
+
 }
 
 init();

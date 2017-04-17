@@ -100,6 +100,7 @@
                       </li>
                       <!--timer END-->
 
+
                     </ul>
                 </div>
                 <!--middle column END-->
@@ -138,20 +139,46 @@
         <!-- Tab 2 -->
         <div id="settings">
             <h1>Settings</h1>
-            <ul>
-              <li class="flex-container">
-                <p>Version 1.00</p><p></p>
-              </li>
-              <li class="flex-container">
+
+            <table>
+              <tr>
+                <td class="flex-container">
+                  <p>Version 1.01</p>
+                </td>
+                <td>
+                </td>
+                <td>
+                </td>
+              </tr>
+              <tr>
+                <td>
                   <p>Reset on new raid</p>
+                </td>
+                <td>
                   <label class="switch">
                     <input type="checkbox" id="setResetRaid">
                     <div class="slider round"></div>
                   </label>
-                  <p></p><p></p><p></p><p></p>
-                <p></p>
-              </li>
-            </ul>
+                </td>
+                <td>
+                  <p>This will also reset the statistics between battles on multi-battle dungeons.</p>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <p>Timed enemy info update</p>
+                </td>
+                <td>
+                  <label class="switch">
+                    <input type="checkbox" id="setUpdateBoss">
+                    <div class="slider round"></div>
+                  </label>
+                </td>
+                <td>
+                  <p>Not sure how well this works or if it helps at all. Not enough testing.</p>
+                </td>
+              </tr>
+            </table>
         </div>
 
     </div>
