@@ -86,6 +86,32 @@ function updateStatistics() {
     updateCharacterInfo();
 }
 
+function setBossInfo(info) {
+  var boss;
+  bossInfo = [];
+  for(var i = 0; i < info.number; i++) {
+      boss = {
+        name : info.param[i].monster,
+        lv : info.param[i].Lv,
+        maxhp : info.param[i].hpmax,
+        hp :info.param[i].hp
+
+      };
+      //convenience feature for nightmare angel halo
+      if(info.param[i].enemy_id == "6005070") {
+        boss.name = info.param[i].monster + " (No Transformation)";
+      } else if (info.param[i].enemy_id == "2974050") {
+        boss.name = info.param[i].monster + " (Gun)";
+      } else if (info.param[i].enemy_id == "2970050") {
+        boss.name = info.param[i].monster + " (Fist)";
+      }
+      bossInfo.push(boss);
+  }
+
+  updateBossInfo();
+}
+
+
 /*
 Clears all boss information and adds the current one
 */
@@ -312,7 +338,7 @@ function appendOthersLog(action, damage) {
 
     totalDamage += actionDamage;
     if(timer != undefined) {
-    	timedTotalDamage += turnDetails.total;
+    	timedTotalDamage += actionDamage;
     }
     actionDamage = 0;
 
@@ -425,13 +451,12 @@ function raidHonorsTimedUpdate() {
         //get info and update
         chrome.devtools.inspectedWindow.eval("Game.view.setupView.pJsnData", (info, err) => {
           if (!err) {
-            if(info.multi == 1) {
-              console.log(data);
+            if(info && info.multi == 1) {
               var data = info.multi_raid_member_info;
-              updateRaidMemberInfo(data);
+              if(data) {
+                updateRaidMemberInfo(data);
+              }
             }
-          } else {
-            console.log("error");
           }
         });
       }, 500);
@@ -650,7 +675,7 @@ var skillsUsed = 0;
 var summonsUsed = 0;
 
 //For resetting raid
-var resetRaidOnChange = false; //when true, all stats will reset if raid id changes
+var resetRaidOnChange = true; //when true, all stats will reset if raid id changes
 var questID = ""; //Id that identifies the quest instance
 
 chrome.devtools.network.onRequestFinished.addListener(function(req) {
@@ -884,6 +909,7 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                 var scenario = data.scenario;
                 var skillName = "";
                 var character;
+                if(!scenario) {return;}
                 for (var i = 0; i < scenario.length; i++) {
                     if(scenario[i].cmd == "ability") {
                         skillName = scenario[i].name;
@@ -1027,7 +1053,7 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                       resetDamage();
                       clearLog();
                       clearEnemyInfo();
-                      resetRaidMemberInfo()
+                      resetRaidMemberInfo();
                   }
                 }
 
@@ -1040,20 +1066,7 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                 showRaidId();
 
                 //boss info
-                var boss;
-                bossInfo = [];
-                for(var i = 0; i < startinfo.boss.param.length; i++) {
-                    boss = {
-                      name : startinfo.boss.param[i].monster,
-                      lv : startinfo.boss.param[i].Lv,
-                      maxhp : startinfo.boss.param[i].hpmax,
-                      hp : startinfo.boss.param[i].hp
-
-                    };
-                    bossInfo.push(boss);
-                }
-
-                updateBossInfo();
+                setBossInfo(startinfo.boss);
 
                 //character info
                 for(var i = 0; i < startinfo.player.param.length; i++) {
@@ -1124,13 +1137,14 @@ function init() {
       var boss;
       bossInfo = [];
       for(var i = 0; i < bosses.number; i++) {
-        boss = {
-          name : bosses.param[i].monster,
-          lv : bosses.param[i].Lv,
-          maxhp : bosses.param[i].hpmax,
-          hp : bosses.param[i].hp
-        };
-        bossInfo.push(boss);
+          boss = {
+            name : bosses.param[i].monster,
+            lv : bosses.param[i].Lv,
+            maxhp : bosses.param[i].hpmax,
+            hp : bosses.param[i].hp
+
+          };
+          bossInfo.push(boss);
       }
       updateBossInfo();
     }
@@ -1151,6 +1165,9 @@ function init() {
   // get raid member honors
   document.getElementById('setRaidHonors').checked = true;
   raidHonorsTimedUpdate();
+
+  // default raid update on raid change is true
+  document.getElementById('setResetRaid').checked = true;
 
 }
 

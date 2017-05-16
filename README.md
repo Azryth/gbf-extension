@@ -1,4 +1,5 @@
 # GBF Logger #
+* Image is a bit outdated
 ![Sneak peak](https://github.com/Azryth/gbf-extension/blob/images/images/damageLogger.PNG?raw=true "Sneak Peak")
 ### What ###
 
@@ -43,12 +44,13 @@ For bugs, it'd be cool if you could open an issue on this github so it's easier 
 * I don't know how the game updates boss hp when you're not doing anything so it only updates when you attack/ use skills / use summons.
 * Click on Turns/Characters/Attacks in the battlelog to see additional details.
 
-### TODO list ###
+### TODO list (in no particular order)###
 
 * Lots of testing
 * Refactoring
-* Chara current hp
+* Characters' current hp
 * Boss log
-* Settings
-* Show if debuffs hit/miss (will get complicated)
+* Settings saved when logger is closed
+* lockout time after attacks
+* Fix extra turns log
 * Extra damage from summons are not logged yet
