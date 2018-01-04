@@ -104,6 +104,10 @@ function setBossInfo(info) {
         boss.name = info.param[i].monster + " (Gun)";
       } else if (info.param[i].enemy_id == "2970050") {
         boss.name = info.param[i].monster + " (Fist)";
+      } else if (info.param[i].enemy_id == "2968050") {
+        boss.name = info.param[i].monster + " (Dagger)";
+      } else if (info.param[i].enemy_id == "2967050") {
+        boss.name = info.param[i].monster + " (Axe)";
       }
       bossInfo.push(boss);
   }
@@ -797,7 +801,7 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                         turnDetails.total += charaDetails.total;
                         turnDetails.details.push(charaDetails);
                     //chain burst
-                    } else if (chainBurst == true && scenario[i].cmd == "effect" && scenario[i].kind.indexOf("burst") !== -1) {
+                    } else if (chainBurst == true && scenario[i].cmd == "effect" && scenario[i].kind && scenario[i].kind.indexOf("burst") !== -1) {
                         if ((i < scenario.length - 1) && scenario[i + 1].cmd == "damage") {
                             for (var j = 0; j < scenario[i + 1].list.length; j++) {
                                 charaDetails.total += scenario[i + 1].list[j].value;
