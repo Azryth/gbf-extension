@@ -1,3 +1,4 @@
+doNotLoad = true;
 
 ////////////////
 // Formatting //
@@ -1261,3 +1262,30 @@ var adtoptions = {
 var graphctx = document.getElementById("graph").getContext("2d");
 
 var adtChart = new Chart.Line(graphctx, {data: adtdata, options: adtoptions});
+
+//-------------------------------------------------------------------------------
+
+function populateShortcuts() {
+	for(var i = 0; i <  Object.keys(locations).length; i++) {
+		console.log(locations[Object.keys(locations)[i]]);
+		console.log(Object.keys(locations)[i]);
+		var row = $("<tr>");
+		
+		var item = $("<td>");		
+		var p = $("<p>");
+		p.text(locations[Object.keys(locations)[i]].desc);
+		item.append(p);
+		row.append(item);
+		
+		var item = $("<td>");
+		var p = $("<p>");
+		p.text(Object.keys(locations)[i]);
+		item.append(p);
+		row.append(item);
+		
+		$("#shortcut_table").append(row);
+	}
+	
+}
+
+populateShortcuts();
