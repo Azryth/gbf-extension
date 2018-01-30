@@ -2,12 +2,13 @@ document.addEventListener("keyup", doKeyFunction);
 
 doNotLoad = false;
 
+/*
 function doKeyFunction(e) {
 	if(locations[e.key] && !doNotLoad) {
 		window.location = locations[e.key].href;
 	}	
 }
-
+*/
 var locations = {
 	r: {
 		href: "http://game.granbluefantasy.jp/#quest/assist",
