@@ -8,12 +8,5 @@
 		"activeTab",
         "http://game.granbluefantasy.jp/*",
         "http://gbf.game.mbga.jp/*"
-    ],
-	"content_scripts": [
-		{
-			"matches": ["http://game.granbluefantasy.jp/*"],
-			"js": ["keyboard.js"],
-			"run_at": "document_end"
-		}
-	]
+    ]
 }
