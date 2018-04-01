@@ -360,9 +360,10 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                 var scenario = data.scenario;
                 var skillName = "";
                 var character;
+                var actionDetails = [];
                 if(!scenario) {return;}
                 for (var i = 0; i < scenario.length; i++) {
-                    if(scenario[i].cmd == "ability") {
+                    if(scenario[i].cmd == "ability" && scenario[i].motion == "on") {
                         skillName = scenario[i].name;
                         character = Number(scenario[i].pos);
                     } else if (scenario[i].cmd == "damage" && scenario[i].to == "boss") {
@@ -396,6 +397,11 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                         updateBossInfo();
                     } else if (scenario[i].cmd == "replace" ) {
                         newFormation[scenario[i].pos] = scenario[i].npc;
+                    } else if (scenario[i].cmd == "loop_damage" && scenario[i].to == "boss") {
+                      for (var j = 0; j < scenario[i].list[0].length; j++) {
+                              actionDamage += scenario[i].list[0][j].value;
+                              actionDetails.push(scenario[i].list[0][j].value);
+                       }
                     }
                 }
 
@@ -405,7 +411,7 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                         characterInfo[newFormation[character]].skillDamage += actionDamage;
                         totalSkillDamage += actionDamage;
                         turnDamage += actionDamage;
-                        appendOthersLog(skillName, actionDamage);
+                        appendOthersLog(skillName, actionDamage, actionDetails);
                     } else {
                         appendOthersLog(skillName, "");
                     }

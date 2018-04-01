@@ -218,7 +218,7 @@ function appendTurnLog(action, damage, turnDetails) {
                 var subsubContainer = $("<div>");
                 subsubContainer.hide();
 
-                if ( actions[j].details.length > 1) {
+                if (actions[j].details.length > 1) {
                     for (var k = 0; k < actions[j].details.length;k++){
 
                         var subActionKey = "";
@@ -269,17 +269,45 @@ function appendTurnLog(action, damage, turnDetails) {
     updateStatistics();
 }
 
-function appendOthersLog(action, damage) {
-    // $("#log").prepend("<li class=\"flex-container\"><p class=\"sub1\">" + action + "</p><p>" + displayNumbers(damage) + "</p></li>");
-    $("#log").prepend(formatLiData(action, displayNumbers(damage), 1, ["flex-container"]));
+function appendOthersLog(action, damage, actionDetails) {
 
-    totalDamage += actionDamage;
-    if(timer != undefined) {
-    	timedTotalDamage += actionDamage;
+  if (actionDetails != undefined && actionDetails.length > 0) {
+    var actionLog = formatLiData("\> " + action, displayNumbers(damage), 1, ["flex-container"]);
+    var subContainer = $("<div>");
+    subContainer.hide();
+    var subActionKey = "- ";
+    for(var i = 0; i < actionDetails.length; i++) {
+      var subActionValue = actionDetails[i];
+      console.log(actionDetails[i]);
+      var subAction = formatLiData(subActionKey, displayNumbers(subActionValue), 2, ["flex-container"]);
+      subContainer.append(subAction);
     }
-    actionDamage = 0;
+    subContainer.append($("<br/>"));
 
-    updateStatistics();
+    var container = $("<div>");
+    container.append(actionLog);
+    container.append(subContainer);
+    actionLog.click(function() {
+        $(this).next().toggle();
+    });
+
+    $("#log").prepend(container);
+  } else {
+    var actionLog = formatLiData(action, displayNumbers(damage), 1, ["flex-container"]);
+    $("#log").prepend(actionLog);
+  }
+
+
+
+
+
+  totalDamage += actionDamage;
+  if(timer != undefined) {
+  	timedTotalDamage += actionDamage;
+  }
+  actionDamage = 0;
+
+  updateStatistics();
 }
 
 function updateMinDmg(charaDetails, pos) {

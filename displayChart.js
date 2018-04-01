@@ -2,9 +2,6 @@ var adtlabels = [];
 var adtdatapoints = [];
 var dtdatapoints = [];
 
-var graphctx = document.getElementById("graph").getContext("2d");
-var adtChart = new Chart.Line(graphctx, {data: adtdata, options: adtoptions});
-
 var adtdata = {
     labels: [],
     datasets: [
@@ -64,6 +61,9 @@ var adtoptions = {
         }]
     }
 };
+
+var graphctx = document.getElementById("graph").getContext("2d");
+var adtChart = new Chart.Line(graphctx, {data: adtdata, options: adtoptions});
 
 function updateadtChart() {
 
