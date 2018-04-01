@@ -34,7 +34,8 @@
 ![Switch Tabs](https://github.com/Azryth/gbf-extension/blob/images/images/devtoolsTab.PNG?raw=true "Switch Tabs")
 ### Feedback ###
 
-If you would like to leave some feedback (bugs, opinion, whatever), use this [form](https://docs.google.com/forms/d/e/1FAIpQLSfhruGYJ6cnb4V8rY85WR3LYyJOs0cfIISMhzttRWSdJ8BkuA/viewform)
+If you would like to leave some feedback (bugs, opinion, whatever), use this [page](https://github.com/Azryth/gbf-extension/issues).
+**Note:** There used to be a link to a google form here. However, it wasn't sending me new responses to my email as I'd hoped and there was no way for people to ask questions and actually receive a reply. It was a bad tool choice. I've transferred the questions over into the issues page, so if I've answered you, it'll be there.
 
 For bugs, it'd be cool if you could open an issue on this github so it's easier to keep it organized.
 
