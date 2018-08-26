@@ -33,7 +33,11 @@ function get_elapsed_time_string(total_seconds) {
 Formats a number by adding ' to separate large numbers
 */
 function displayNumbers(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "'");
+	if (x) {
+		return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "'");
+	} else {
+		return '0';
+	}
 }
 
 /*

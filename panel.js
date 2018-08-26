@@ -442,13 +442,15 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                     if(scenario[i].cmd == "summon_cutin") {
                         summonName = scenario[i].name;
                     } else if(scenario[i].cmd == "summon") {
-                        if(scenario[i].name != "" && summonName == "") {
+                        if(scenario[i].kind && scenario[i].kind.indexOf("attack") > -1 && scenario[i].name !== "" && summonName == "" ) {
                             summonName = scenario[i].name;
                         }
 
-                        for(var j = 0; j < scenario[i].list[0].damage.length; j++) {
-                            actionDamage += scenario[i].list[0].damage[j].value;
-                        }
+						if (scenario[i].kind && scenario[i].kind.indexOf("damage") > -1) {
+							for(var j = 0; j < scenario[i].list[0].damage.length; j++) {
+								actionDamage += scenario[i].list[0].damage[j].value;
+							}
+						}
 
 
                     //boss info
