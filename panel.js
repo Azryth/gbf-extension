@@ -150,7 +150,7 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
                 const data = JSON.parse(body);
 				console.log(data);
 				var scenario = data.scenario;
-				
+
                 //safety check
                 var chainBurst = false;
                 //store all turn information in here
@@ -502,7 +502,8 @@ chrome.devtools.network.onRequestFinished.addListener(function(req) {
         else if (path.indexOf("start.json") !== -1) {
             req.getContent(function(body){
                 var startinfo = JSON.parse(body);
-
+                lockout = startinfo.turn_waiting;
+                countDownLockOut(lockout - Date.now());
                 if(resetRaidOnChange) {
                   if(questID !== startinfo.raid_id){
                       questID = startinfo.raid_id;

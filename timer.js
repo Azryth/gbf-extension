@@ -107,3 +107,31 @@ function updateRaidMemberInfo(rmi) {
 }
 
 document.querySelector("#setRaidHonors").addEventListener('click', raidHonorsTimedUpdate, false);
+
+//----------------------------------- Lock out --------------------------------
+
+var lockoutInterval;
+var lockoutElapsed = 0;
+function countDownLockOut(lockoutTime) {
+  console.log(lockoutTime);
+  if (lockoutInterval !== undefined) {
+    clearInterval(lockoutInterval);
+    lockoutElapsed = 0;
+  }
+  lockoutInterval = setInterval(function() {
+      lockoutElapsed = lockoutElapsed + 10;
+      var cur = lockoutTime - lockoutElapsed + "";
+      if (cur.length <= 3) {
+        cur = "0" + cur;
+      }
+      $('#lockoutTimer').text( cur.slice(0, cur.length-3) + "." + cur.slice(cur.length-3, cur.length));
+      if (lockoutTime - lockoutElapsed < 0) {
+        clearInterval(lockoutInterval);
+        lockoutInterval = undefined;
+        lockoutElapsed = 0;
+        $('#lockoutTimer').text(0);
+      }
+    }, 10
+  );
+
+}
